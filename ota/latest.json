@@ -1,0 +1,14 @@
+{
+  "tag_name": "v1.0.31",
+  "name": "QuizLock v1.0.31 (Build #31)",
+  "version_code": 31,
+  "body": "Direct OTA APK Release (Commit 4b62099f79e16b44af631059a87bcdca7860f2c8).",
+  "assets": [
+    {
+      "name": "QuizLock-latest.apk",
+      "size": 12077740,
+      "sha256": "c01dd7d76c08f1bf752994eb4fd18554760365ed850ba9304839a18246a7a5a7",
+      "browser_download_url": "https://kelly-ideas.github.io/quizlock/ota/QuizLock-latest.apk"
+    }
+  ]
+}
