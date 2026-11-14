@@ -1,0 +1,26 @@
+# Privacy Policy for Kmito
+
+**Effective date:** October 24, 2026  
+**Last updated:** November 14, 2026  
+**Developer:** Kelly Ideas  
+**Contact:** [kellyideas.team@gmail.com](mailto:kellyideas.team@gmail.com)
+
+Kmito (`io.github.kellyideas.kmito`) is a cognitive quiz and screen-time budget tracker developed by **Kelly Ideas**. It works fully offline.
+
+## Data Collection and Sharing
+
+Kmito does **not** collect or share personal data. The only data that can leave your phone is anonymous usage data, and only if you turn it on (see *Anonymous usage data* below). Kmito never sells data and shows no ads.
+
+- **Internet access:** Kmito uses the internet only to send anonymous usage data after you opt in. It downloads no updates or content from the internet in the Google Play edition.
+- **Local-Only Storage:** All quiz attempts, earned minute balances, streaks, and user settings (such as theme and language preferences) are stored strictly locally on your device.
+- **Microphone (optional, for voice answers):** Kmito asks for microphone access only if you want to answer quizzes by voice. You can decline and answer by tapping instead. When you use voice answers, Kmito passes your speech to Android's speech recognition, gets back text, and compares that text with the answer choices. Kmito does not record, save or upload audio, and it keeps no transcripts. On Android 12 and later, when your phone has on-device speech recognition, Kmito uses it and the audio stays on your phone. Otherwise Android uses your phone's default speech recognition service (often Google's), which may process the audio on its own servers under that provider's privacy policy. Kelly Ideas receives none of this audio or text.
+- **Family Page (Direct edition only, off by default):** The Direct edition (`io.github.kellyideas.kmito.unrestricted`, not distributed through Google Play) has an optional family page. Only when you turn it on, the app sends a small progress snapshot to the pack server address that you set, which is your own server on your home network. The snapshot holds a random device ID made by the app, the child or phone name, and progress numbers: balance, savings jar, streak, minutes earned and used today, answers and right answers of the last 7 days, chores waiting and the number of alerts. It is sent at most every 5 minutes, and only when the balance changed. Nothing is sent to Kelly Ideas or any third party. Plain HTTP is used only for private network addresses. The server keeps the snapshots in memory only. Turn the switch off to stop it.
+- **Not Included in Backups:** The app database is excluded from Android cloud backup and from device-to-device transfer, so it is not copied to your Google account or to a new phone. The same applies to your permission choices, the app's on-device usage log, today's snooze count, the lock timers, the internal lock token, the tamper alerts, pending Commitment mode changes and the family page settings.
+- **On-Device Usage Log:** Kmito keeps a short log of app events (for example, which permissions you allowed or declined and from which screen) to improve the app. It holds no personal data and keeps only the newest 500 entries. It leaves your device only as described in *Anonymous usage data*.
+- **Anonymous usage data (optional, off by default):** In Settings → About you can turn on *Share anonymous usage data*. Only then does Kmito send app events to Google Analytics for Firebase, a service run by Google for Kelly Ideas. The events say which screens and steps were used, for example which permission was allowed or declined, whether setup was finished, and whether the quiz lock is on. They never contain your name, email, quiz answers, the names of your apps, or what you do in other apps. Firebase also receives technical data that comes with every event: a random app-install ID made by Firebase, device model, Android version, app version, language, and an approximate location (country or region) derived from the network address (the address itself is not stored by Kelly Ideas). Kmito does not use the advertising ID or the Android ID, sets no user ID, and turns off ad personalization. Data is sent encrypted (HTTPS). Google Analytics keeps event data for 2 months. Turn the switch off at any time: sending stops at once and the app-install ID is deleted from your phone. While Child Guard is on, nothing is sent, whatever the switch says. Google's own handling is described at [policies.google.com/privacy](https://policies.google.com/privacy) and [firebase.google.com/support/privacy](https://firebase.google.com/support/privacy).
+- **Data Deletion:** You can delete all locally stored data at any time by clearing the app's storage in your Android device settings or by uninstalling the application. Anonymous usage data already sent holds no name or email, so it cannot be traced back to you; Google Analytics deletes it automatically after 2 months.
+- **No Advertising:** Kmito contains no advertising SDKs and no crash-reporting SDKs. The only third-party service is the optional Google Analytics for Firebase described above.
+
+## Contact Us
+
+If you have any questions about this Privacy Policy, please contact Kelly Ideas at [kellyideas.team@gmail.com](mailto:kellyideas.team@gmail.com).
