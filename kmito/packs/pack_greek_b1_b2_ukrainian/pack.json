@@ -1,0 +1,16 @@
+{
+  "id": "pack_greek_b1_b2_ukrainian",
+  "title": "Ελληνικά B1–B2 (Українською)",
+  "subtitle": "100 завдань рівнів B1–B2: вид дієслова, να замість інфінітива, пасив, відмінки, сполучники, сталі вирази та «фальшиві друзі» з поясненнями українською",
+  "category": "VOCABULARY",
+  "author": "Kmito Language Lab",
+  "version": "1.1.0",
+  "difficultyLabel": "CEFR B1–B2 • Граматика + Лексика",
+  "accentHex": "#0EA5E9",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "SHARP_120",
+  "subject": "COURSE",
+  "teaches": "el",
+  "stage": 2,
+  "baseLanguage": "ua"
+}

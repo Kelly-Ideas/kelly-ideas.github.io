@@ -1,0 +1,13 @@
+{
+  "id": "pack_schoolers_7_9_nature_science",
+  "title": "Junior Scientists (7–9 yrs): Nature, Space & Matter",
+  "subtitle": "Water states (H₂O), Solar System planets, magnets, plant photosynthesis & rainbows",
+  "category": "PHYSICS",
+  "author": "Kmito Junior Academy",
+  "version": "2.0.0",
+  "difficultyLabel": "Ages 7–9 • Grades 2–4",
+  "accentHex": "#06B6D4",
+  "ageGroup": "AGES_7_9",
+  "iqTarget": "WARMUP_100",
+  "subject": "SCIENCE"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "pack_english_b2_ukrainian",
+  "title": "English B2 Grammar & Vocab (Українською)",
+  "subtitle": "100 завдань рівня B2: умовні речення, модальні дієслова в минулому, інверсія, герундій та фразові дієслова з поясненнями українською",
+  "category": "VOCABULARY",
+  "author": "Kmito Language Lab",
+  "version": "2.1.0",
+  "difficultyLabel": "CEFR B2 • Граматика + Лексика",
+  "accentHex": "#F59E0B",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "SHARP_120",
+  "subject": "COURSE",
+  "teaches": "en",
+  "stage": 1,
+  "baseLanguage": "ua"
+}

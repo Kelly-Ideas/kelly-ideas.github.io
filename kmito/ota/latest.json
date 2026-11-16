@@ -1,0 +1,14 @@
+{
+  "tag_name": "v1.0.103",
+  "name": "Kmito v1.0.103 (Build #103)",
+  "version_code": 103,
+  "body": "Direct OTA APK Release (Commit 2f0907fe395d8bd301e75ca9ee996e16e1cfc2e8).",
+  "assets": [
+    {
+      "name": "Kmito-latest.apk",
+      "size": 4814027,
+      "sha256": "0e0cbea212533ec5d593196a4d2dd64703ea5334bb7d1391420e7f021fd64542",
+      "browser_download_url": "https://kelly-ideas.github.io/kmito/ota/Kmito-latest.apk"
+    }
+  ]
+}

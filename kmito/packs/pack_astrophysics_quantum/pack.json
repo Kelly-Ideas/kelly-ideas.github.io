@@ -1,0 +1,13 @@
+{
+  "id": "pack_astrophysics_quantum",
+  "title": "Astrophysics & Relativistic Mechanics",
+  "subtitle": "Escape velocity, orbital resonances, thermodynamics & photon energy",
+  "category": "PHYSICS",
+  "author": "CERN Open Curricula",
+  "version": "2.1.0",
+  "difficultyLabel": "Easy – Master",
+  "accentHex": "#06B6D4",
+  "ageGroup": "AGES_14_17",
+  "iqTarget": "SHARP_120",
+  "subject": "SCIENCE"
+}

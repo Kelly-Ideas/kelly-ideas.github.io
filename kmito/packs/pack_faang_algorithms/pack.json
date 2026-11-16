@@ -1,0 +1,13 @@
+{
+  "id": "pack_faang_algorithms",
+  "title": "Big Tech Systems & Algorithmic Mastery",
+  "subtitle": "Graph theory, concurrency, memory complexity & Kotlin/Python internals",
+  "category": "CODING",
+  "author": "Systems Architecture Guild",
+  "version": "2.1.0",
+  "difficultyLabel": "Medium – Master",
+  "accentHex": "#38BDF8",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "GENIUS_140",
+  "subject": "CODING"
+}
