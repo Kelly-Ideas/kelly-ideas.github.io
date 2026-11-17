@@ -1,0 +1,13 @@
+{
+  "id": "pack_quick_easy_warmup",
+  "title": "Quick & Easy 10-Second Brain Warm-Up",
+  "subtitle": "100% Easy instant-solve tasks across Math, Logic, Science, Chess & Words for fast unlocks",
+  "category": "LOGIC",
+  "author": "Kmito Fast-Flow Lab",
+  "version": "2.0.0",
+  "difficultyLabel": "100% Easy • 10s Solves",
+  "accentHex": "#10B981",
+  "ageGroup": "AGES_7_9",
+  "iqTarget": "WARMUP_100",
+  "subject": "MIX"
+}

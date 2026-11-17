@@ -1,0 +1,13 @@
+{
+  "id": "pack_lateral_logic_riddles",
+  "title": "Lateral Logic & Game Theory",
+  "subtitle": "Nash equilibria, Bayesian puzzles, Monty Hall & deduction",
+  "category": "LOGIC",
+  "author": "MindSports Collective",
+  "version": "2.1.0",
+  "difficultyLabel": "Easy – Master",
+  "accentHex": "#10B981",
+  "ageGroup": "AGES_14_17",
+  "iqTarget": "GENIUS_140",
+  "subject": "LOGIC"
+}

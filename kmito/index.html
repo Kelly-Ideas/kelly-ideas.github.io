@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Kmito: One question first</title>
+<meta name="description" content="Kmito asks one question before the feed opens. A right answer makes 10 minutes of screen time. No account, no ads.">
+<meta property="og:title" content="Kmito: One question first.">
+<meta property="og:description" content="A right answer makes 10 minutes of screen time. A fair deal with your phone.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..900&family=JetBrains+Mono:wght@400;700&display=swap">
+<script>
+  /* Theme before first paint: Dark by default; a saved choice wins. */
+  var t = 'dark'; try { var saved = localStorage.getItem('kmito-theme'); if (saved === 'dark' || saved === 'light') t = saved; } catch (e) {}
+  document.documentElement.setAttribute('data-theme', t);
+  /* Motion class before first paint, so entry animations start without a flash. */
+  if (window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+</script>
+<style>
+/* =====================================================================
+   1. TOKENS
+   Named after docs/design-system/tokens.json and foundations.md.
+   Component rules below read only these custom properties.
+   ===================================================================== */
+:root {
+  /* space/* (foundations §3) */
+  --space-0: 0px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+
+  /* radius/* (foundations §4) */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-nav: 32px;
+  --radius-full: 999px;
+
+  /* font/family/*, font/weight/* (foundations §2.1), with real fallbacks */
+  --font-family-sans: "Google Sans Flex", "Google Sans", "Product Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* type/<style>/* (tokens.json "typography"); sp read as px */
+  --type-display-medium-size: 45px;
+  --type-display-medium-line-height: 52px;
+  --type-display-small-size: 36px;
+  --type-display-small-line-height: 44px;
+  --type-headline-small-size: 24px;
+  --type-headline-small-line-height: 32px;
+  --type-title-large-size: 22px;
+  --type-title-large-line-height: 28px;
+  --type-title-medium-size: 16px;
+  --type-title-medium-line-height: 24px;
+  --type-title-medium-tracking: 0.15px;
+  --type-body-large-size: 16px;
+  --type-body-large-line-height: 20px;
+  --type-body-large-tracking: 0.5px;
+  --type-body-medium-size: 14px;
+  --type-body-medium-line-height: 18px;
+  --type-body-medium-tracking: 0.25px;
+  --type-body-small-size: 12px;
+  --type-body-small-line-height: 16px;
+  --type-body-small-tracking: 0.4px;
+  --type-label-large-size: 14px;
+  --type-label-large-line-height: 20px;
+  --type-label-large-tracking: 0.1px;
+  --type-app-screen-title-weight: 900;
+  --type-app-screen-title-tracking: -0.5px;
+  --type-app-overline-size: 11px;
+  --type-app-overline-line-height: 16px;
+  --type-app-overline-tracking: 1px;
+  --type-app-button-size: 14px;
+  --type-app-button-line-height: 20px;
+  --type-app-button-tracking: 0.1px;
+  --type-mono-display-size: 56px;
+  --type-mono-display-line-height: 60px;
+  --type-mono-display-tracking: -2px;
+  --type-mono-display-small-size: 36px;
+  --type-mono-display-small-line-height: 44px;
+  --type-mono-title-size: 16px;
+  --type-mono-title-line-height: 24px;
+  --type-mono-label-large-size: 14px;
+  --type-mono-label-large-line-height: 20px;
+  --type-mono-label-size: 11px;
+  --type-mono-label-line-height: 16px;
+  --type-mono-chip-size: 10px;
+  --type-mono-chip-line-height: 14px;
+  --type-icon-28-size: 28px;
+  --type-icon-24-size: 24px;
+  --type-icon-18-size: 18px;
+  --type-icon-16-size: 16px;
+
+  /* Tint opacities (foundations §1.4) */
+  --tint-12: 12%;
+  --tint-14: 14%;
+  --tint-20: 20%;
+  --tint-30: 30%;
+  --tint-38: 38%;
+  --tint-45: 45%;
+  --tint-65: 65%;
+
+  /* effect/blur/glass (tokens.json "effect") */
+  --effect-blur-glass: 24px;
+
+  /* Motion (foundations §6; components: Slip Card, Punch Row, Spark Mark) */
+  --motion-selection: 220ms;      /* tween(220) selection colour */
+  --motion-content: 180ms;        /* tween(180) content */
+  --motion-page: 280ms;           /* tween(280, FastOutSlowIn) level change */
+  --motion-slip-line: 120ms;      /* slip line feed */
+  --motion-punch: 150ms;          /* punch fill grows from the centre */
+  --motion-flash: 160ms;          /* spark flash, each way */
+  --motion-slip: 600ms;           /* a slip feeds up in about 600 ms */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* FastOutSlowIn */
+
+  /* Component spec sizes (components.md: Button, Punch Row, Slip Card, Slip Line) */
+  --size-button: 48px;
+  --size-button-hero: 52px;
+  --size-target: 48px;
+  --size-header-control: calc(var(--size-button) - var(--space-8)); /* header buttons, 40 */
+  --size-hole: 10px;
+  --size-hole-ring: 1.5px;
+  --size-hairline: 1px;
+  --size-picked-border: 1.5px;
+  --size-slip-tooth: 10px;
+  --size-slip-line-min: 24px;
+  --size-option-min: 56px;
+  --size-letter-badge: 28px;
+  --size-leader-dot: 1.5px;
+  --size-leader-pitch: 4px;
+  --size-dash: 4px;
+
+  /* PAGE-ONLY VALUES: no token exists for these (listed in the report) */
+  --page-max: 1200px;
+  --page-header-h: 64px;
+  --page-gutter: clamp(var(--space-16), 4vw, var(--space-40));
+  --page-section-pad: clamp(calc(var(--space-40) * 2), 12vw, calc(var(--space-40) * 4));
+  /* Hero: 100 px at most (owner, Figma 198:19106); otherwise as large as the one-line
+     "One question" fits (its width is 6.29 x the size; 6.4 leaves a little air). 56 at 390. */
+  --page-hero-fit: 6.4;
+  --page-hero-card: 26rem;
+  --page-type-hero: min(100px, calc((100vw - 2 * var(--page-gutter)) / var(--page-hero-fit)));
+  --page-type-hero-line: 1;                      /* 0.92 let the q descender touch the f of "first." */
+  --page-tracking-hero: -0.046em;
+  --page-type-rate: clamp(72px, 15vw, 200px);
+  --page-type-quote: clamp(32px, 5.4vw, 72px);
+  --page-tracking-tight: -0.035em;
+  --page-measure: 34ch;
+  --page-glow-size: clamp(160px, 20vmax, 300px);       /* small, light part of the glow */
+  --page-glow-size-big: clamp(560px, 80vmax, 1240px);  /* big, heavy part of the glow */
+}
+
+/* Colour roles, Light mode (tokens.json $extensions.kmito.modes.light) */
+:root {
+  --color-primary: #2C6300;
+  --color-on-primary: #FFFFFF;
+  --color-primary-container: #D2FF28;
+  --color-on-primary-container: #142400;
+  --color-background: #F7F5EE;
+  --color-on-background: #141412;
+  --color-surface: #FFFFFF;
+  --color-on-surface: #141412;
+  --color-surface-variant: #ECE8DD;
+  --color-on-surface-variant: #6B685E;
+  --color-outline: #DBD6C9;
+  --color-accent-volt: #2C6300;
+  --gradient-card-border-start: #DBD6C9BF;
+  --gradient-card-border-end: #DBD6C959;
+  /* glow: the owner asked for lime in both themes, so Light uses the volt
+     alpha primitives (alpha/volt-28, -07, -00) instead of glow-primary's leaf */
+  --gradient-glow-primary-center: #D2FF2847;
+  --gradient-glow-primary-mid: #D2FF2812;
+  --gradient-glow-primary-edge: #D2FF2800;
+  /* slip/* (foundations §1.2, components "Slip tokens") */
+  --slip-paper: #171714;
+  --slip-ink: #F6F4EE;
+  --slip-ink-muted: #8E8C84;
+  --slip-rule: #6B6858;
+  --slip-spark: #D2FF28;
+  --slip-hole: var(--color-background);
+  /* page alias: the phone frame (graphite ink on paper) */
+  --page-phone-frame: var(--color-on-background);
+  --page-phone-bezel: var(--color-on-background);  /* black band between frame and screen */
+}
+
+/* Colour roles, Dark mode: follows the system unless the visitor chose Light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-primary: #D2FF28;
+    --color-on-primary: #0E0E0C;
+    --color-primary-container: #28300A;
+    --color-on-primary-container: #D2FF28;
+    --color-background: #0E0E0C;
+    --color-on-background: #F6F4EE;
+    --color-surface: #171714;
+    --color-on-surface: #F6F4EE;
+    --color-surface-variant: #22221D;
+    --color-on-surface-variant: #8E8C84;
+    --color-outline: #2F2E28;
+    --color-accent-volt: #D2FF28;
+    --gradient-card-border-start: #FFFFFF17;
+    --gradient-card-border-end: #FFFFFF08;
+    --gradient-glow-primary-center: #D2FF2838;
+    --gradient-glow-primary-mid: #D2FF2812;
+    --gradient-glow-primary-edge: #D2FF2800;
+    --slip-paper: #F7F5EE;
+    --slip-ink: #141412;
+    --slip-ink-muted: #6B685E;
+    --slip-rule: #AFA99C;
+    --slip-spark: #2C6300;
+    --page-phone-frame: var(--color-outline);
+    --page-phone-bezel: var(--color-background);
+  }
+}
+:root[data-theme="dark"] {
+  --color-primary: #D2FF28;
+  --color-on-primary: #0E0E0C;
+  --color-primary-container: #28300A;
+  --color-on-primary-container: #D2FF28;
+  --color-background: #0E0E0C;
+  --color-on-background: #F6F4EE;
+  --color-surface: #171714;
+  --color-on-surface: #F6F4EE;
+  --color-surface-variant: #22221D;
+  --color-on-surface-variant: #8E8C84;
+  --color-outline: #2F2E28;
+  --color-accent-volt: #D2FF28;
+  --gradient-card-border-start: #FFFFFF17;
+  --gradient-card-border-end: #FFFFFF08;
+  --gradient-glow-primary-center: #D2FF2838;
+  --gradient-glow-primary-mid: #D2FF2812;
+  --gradient-glow-primary-edge: #D2FF2800;
+  --slip-paper: #F7F5EE;
+  --slip-ink: #141412;
+  --slip-ink-muted: #6B685E;
+  --slip-rule: #AFA99C;
+  --slip-spark: #2C6300;
+  --page-phone-frame: var(--color-outline);
+  --page-phone-bezel: var(--color-background);
+}
+
+/* =====================================================================
+   2. BASE
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+[tabindex="-1"]:focus { outline: none; box-shadow: none; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html.motion { scroll-behavior: smooth; }
+
+/* Scrollbars in the macOS manner: thin rounded thumb on a clear track,
+   quiet at rest, stronger while scrolling or under the pointer. */
+:root { --scroll-thumb: color-mix(in srgb, var(--color-on-surface-variant) var(--tint-38), transparent); }
+:root.is-scrolling { --scroll-thumb: color-mix(in srgb, var(--color-on-surface-variant) var(--tint-65), transparent); }
+::-webkit-scrollbar { width: var(--space-12); height: var(--space-12); background: transparent; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  background-clip: padding-box;
+  border: calc(var(--space-6) / 2) solid transparent;
+  border-radius: var(--radius-full);
+  min-height: var(--space-40);
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--color-on-surface-variant); }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+@supports not selector(::-webkit-scrollbar) {
+  html, .screens-track { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent; }
+}
+body {
+  margin: var(--space-0);
+  background: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-family-sans);
+  font-size: var(--type-body-large-size);
+  line-height: var(--type-body-large-line-height);
+  letter-spacing: var(--type-body-large-tracking);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ol, ul, dl, dd, figure { margin: var(--space-0); }
+ol, ul { padding: var(--space-0); list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; }
+:focus-visible { outline: var(--size-hairline) solid var(--color-on-surface); outline-offset: var(--space-2); box-shadow: 0 0 0 var(--space-2) var(--color-background); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; left: var(--space-16); top: var(--space-8); z-index: 100; padding: var(--space-8) var(--space-16); border-radius: var(--radius-full); background: var(--color-on-surface); color: var(--color-surface); transform: translateY(-200%); }
+.skip-link:focus-visible { transform: translateY(0); }
+section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
+
+.wrap { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--page-gutter); }
+.num { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); letter-spacing: 0; white-space: nowrap; }
+.overline {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--type-app-overline-size);
+  line-height: var(--type-app-overline-line-height);
+  letter-spacing: var(--type-app-overline-tracking);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
+.h2 {
+  font-weight: var(--type-app-screen-title-weight);
+  font-size: var(--type-display-small-size);
+  line-height: var(--type-display-small-line-height);
+  letter-spacing: var(--type-app-screen-title-tracking);
+  text-wrap: balance;
+  margin-top: var(--space-12);
+}
+.lead {
+  font-size: var(--type-title-large-size);
+  line-height: var(--type-title-large-line-height);
+  letter-spacing: 0;
+  color: var(--color-on-surface-variant);
+  max-width: var(--page-measure);
+  text-wrap: pretty;
+}
+.section { padding-block: var(--page-section-pad); }
+.section-head { max-width: 46rem; }
+.section-head .lead { margin-top: var(--space-16); }
+.spark-text { color: var(--color-accent-volt); }
+
+@media (min-width: 900px) {
+  .h2 { font-size: var(--type-display-medium-size); line-height: var(--type-display-medium-line-height); }
+  .lead { font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); }
+}
+
+/* Bento Card: surface + 1dp gradient hairline */
+.card {
+  --slip-hole: var(--color-surface);
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    linear-gradient(180deg, var(--gradient-card-border-start), var(--gradient-card-border-end)) border-box;
+  border: var(--size-hairline) solid transparent;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-16);
+}
+
+/* Spark Mark ("k") */
+.spark { display: inline-block; flex: none; width: var(--type-icon-24-size); height: var(--type-icon-24-size); }
+.spark svg { display: block; width: 100%; height: 100%; }
+.spark.is-flash { animation: spark-flash calc(var(--motion-flash) * 2) var(--ease-standard) 1; }
+@keyframes spark-flash { 50% { transform: scale(1.25); } }
+
+/* Lime glow behind the page, in two parts on springs: a small light one that
+   keeps close to the pointer and a much bigger heavy one that lags and swings.
+   On touch screens scrolling leads them. Moves by transform only. */
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+/* A fine static grain dithers the big, faint gradient so it shows no rings. */
+.glow::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: var(--tint-12);
+  mix-blend-mode: overlay;
+}
+.glow__blob {
+  position: absolute; left: 0; top: 0;
+  --glow-size: var(--page-glow-size);
+  width: var(--glow-size); height: var(--glow-size);
+  margin: calc(var(--glow-size) / -2) 0 0 calc(var(--glow-size) / -2);
+  transform: translate3d(70vw, 30vh, 0);
+  will-change: transform;
+}
+.glow__blob::before {
+  content: ""; position: absolute; inset: 0; border-radius: var(--radius-full);
+  background: radial-gradient(circle closest-side, var(--gradient-glow-primary-center), var(--gradient-glow-primary-mid) 55%, var(--gradient-glow-primary-edge));
+  opacity: 0; transition: opacity var(--motion-slip) var(--ease-standard);
+}
+.glow.is-on .glow__blob::before { opacity: 1; }
+.glow__blob--big { --glow-size: var(--page-glow-size-big); }
+.glow.is-on .glow__blob--big::before { opacity: var(--tint-65); }
+.glow__blob.is-flash::before { animation: glow-flash calc(var(--motion-flash) * 4) var(--ease-standard) 1; }
+@keyframes glow-flash { 35% { transform: scale(1.35); } }
+
+/* =====================================================================
+   3. SLIDING HOVERS
+   Buttons: label slides to a second line, or a volt fill wipes in.
+   Links: the underline travels. Cards and rows: a fill slides in.
+   Every hover has the same :focus-visible state. Hover is decoration only.
+   ===================================================================== */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--size-button);
+  padding-inline: var(--space-24);
+  border-radius: var(--radius-full);
+  border: var(--size-hairline) solid transparent;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--type-app-button-size);
+  line-height: var(--type-app-button-line-height);
+  letter-spacing: var(--type-app-button-tracking);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.95); }
+
+/* Primary: the label slides up to show a second line */
+.btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn--hero { min-height: var(--size-button-hero); padding-inline: calc(var(--space-24) + var(--space-8)); font-size: var(--type-title-medium-size); line-height: var(--type-title-medium-line-height); }
+.btn__slide { display: block; height: var(--type-app-button-line-height); line-height: inherit; overflow: hidden; }
+.btn--hero .btn__slide { height: var(--type-title-medium-line-height); }
+.btn__line { display: block; height: 100%; line-height: inherit; transition: transform var(--motion-page) var(--ease-standard); }
+.btn__line + .btn__line { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); }
+
+/* Outlined: a volt fill wipes in from the left; its own copy of the label counter-slides so the text stays put */
+.btn--outline { border-color: var(--color-outline); color: var(--color-on-surface); background: transparent; }
+.btn__wipe {
+  position: absolute; inset: calc(var(--size-hairline) * -1);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-primary); color: var(--color-on-primary);
+  overflow: hidden;
+  transform: translateX(-101%);
+  transition: transform var(--motion-page) var(--ease-standard);
+  z-index: 1;
+}
+.btn__wipe-text { transform: translateX(101%); transition: transform var(--motion-page) var(--ease-standard); }
+
+/* Text link: a resting hairline at 38%, and a full underline that travels in from the left and out to the right */
+.link { position: relative; display: inline-block; padding-block: var(--space-2); }
+.link::before, .link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: var(--size-hairline); background: currentColor; }
+.link::before { opacity: var(--tint-38); }
+.link::after { transform: scaleX(0); transform-origin: right center; transition: transform var(--motion-page) var(--ease-standard); }
+
+/* Icon button (theme): two icons, one slides out as the other slides in */
+.icon-btn {
+  position: relative; display: inline-grid; place-items: center;
+  width: var(--size-target); height: var(--size-target);
+  border-radius: var(--radius-full); border: var(--size-hairline) solid var(--color-outline);
+  background: transparent; color: var(--color-on-surface); cursor: pointer; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn svg { grid-area: 1 / 1; width: var(--type-icon-18-size); height: var(--type-icon-18-size); transition: transform var(--motion-page) var(--ease-standard), opacity var(--motion-page) var(--ease-standard); }
+.icon-btn .icon-next { transform: translateY(150%); opacity: 0; }
+
+@media (hover: hover) {
+  .btn--primary:hover .btn__line { transform: translateY(-100%); }
+  .btn--outline:hover .btn__wipe, .btn--outline:hover .btn__wipe-text { transform: translateX(0); }
+  .link:hover::after { transform: scaleX(1); transform-origin: left center; }
+  .icon-btn:hover .icon-now { transform: translateY(-150%); opacity: 0; }
+  .icon-btn:hover .icon-next { transform: translateY(0); opacity: 1; }
+}
+.btn--primary:focus-visible .btn__line { transform: translateY(-100%); }
+.btn--outline:focus-visible .btn__wipe, .btn--outline:focus-visible .btn__wipe-text { transform: translateX(0); }
+.link:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+.icon-btn:focus-visible .icon-now { transform: translateY(-150%); opacity: 0; }
+.icon-btn:focus-visible .icon-next { transform: translateY(0); opacity: 1; }
+
+/* =====================================================================
+   4. HEADER with the Punch Row as page progress
+   ===================================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--page-header-h);
+  background: color-mix(in srgb, var(--color-background) 88%, transparent);
+  -webkit-backdrop-filter: blur(var(--effect-blur-glass));
+  backdrop-filter: blur(var(--effect-blur-glass));
+  border-bottom: var(--size-hairline) solid var(--color-outline);
+}
+.site-header .wrap { height: 100%; display: flex; align-items: center; gap: var(--space-16); }
+.brand { display: inline-flex; align-items: center; gap: var(--space-8); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); min-height: var(--size-target); }
+.brand svg { width: var(--type-icon-28-size); height: var(--type-icon-28-size); flex: none; color: var(--color-on-surface); }
+.nav { display: none; gap: var(--space-24); margin-inline-start: var(--space-16); font-weight: var(--font-weight-medium); font-size: var(--type-label-large-size); line-height: var(--type-label-large-line-height); letter-spacing: var(--type-label-large-tracking); color: var(--color-on-surface-variant); }
+.nav .link::before { opacity: 0; }
+.header-end { margin-inline-start: auto; display: flex; align-items: center; gap: var(--space-12); }
+.header-get { display: none; min-height: var(--size-header-control); height: var(--size-header-control); padding-inline: var(--space-16); }
+.site-header .icon-btn { width: var(--size-header-control); height: var(--size-header-control); }
+.punch-progress { display: flex; gap: var(--space-8); align-items: center; }
+.punch-progress span { position: relative; width: var(--size-hole); height: var(--size-hole); border-radius: var(--radius-full); border: var(--size-hole-ring) solid var(--color-on-surface-variant); }
+.punch-progress span::after { content: ""; position: absolute; inset: calc(var(--size-hole-ring) * -1); border-radius: inherit; background: var(--color-on-surface); transform: scale(0); transition: transform var(--motion-punch) var(--ease-standard); }
+.punch-progress span.is-punched::after { transform: scale(1); }
+@media (min-width: 420px) { .header-get { display: inline-flex; } }
+.motion .site-header { animation: header-in var(--motion-slip) var(--ease-standard) backwards; }
+.motion .site-header .brand,
+.motion .site-header .nav > a,
+.motion .site-header .header-end > * { animation: header-item-in var(--motion-slip) var(--ease-standard) backwards; animation-delay: calc(var(--motion-flash) + var(--i, 0) * 60ms); }
+.motion .site-header .nav > a:nth-child(1) { --i: 1; }
+.motion .site-header .nav > a:nth-child(2) { --i: 2; }
+.motion .site-header .nav > a:nth-child(3) { --i: 3; }
+.motion .site-header .nav > a:nth-child(4) { --i: 4; }
+.motion .site-header .header-end > :nth-child(1) { --i: 5; }
+.motion .site-header .header-end > :nth-child(2) { --i: 6; }
+.motion .site-header .header-end > :nth-child(3) { --i: 7; }
+@keyframes header-in { from { transform: translateY(-100%); opacity: 0; } }
+@keyframes header-item-in { from { transform: translateY(calc(var(--space-16) * -1)); opacity: 0; } }
+@media (min-width: 960px) { .nav { display: flex; } }
+
+/* =====================================================================
+   5. HERO: the slogan and a real question
+   ===================================================================== */
+.hero { padding-block: calc(var(--space-40) * 1.5) var(--page-section-pad); }
+.hero .wrap { display: grid; gap: calc(var(--space-40) * 1.5); align-items: center; }
+.hero-copy .overline { margin-bottom: var(--space-20); }
+.hero h1 {
+  font-weight: var(--type-app-screen-title-weight);
+  font-size: var(--page-type-hero);
+  line-height: var(--page-type-hero-line);
+  letter-spacing: var(--page-tracking-hero);
+}
+.hero h1 span { display: block; white-space: nowrap; } /* "One question" stays one line, so its q never sits over the f of "first." */
+.hero .lead { margin-top: var(--space-24); }
+.hero-try { margin-top: var(--space-24); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-16) var(--space-24); color: var(--color-on-surface-variant); font-size: var(--type-body-large-size); }
+.hero-stage { perspective: 1200px; }
+@media (min-width: 900px) {
+  .hero { min-height: calc(100vh - var(--page-header-h)); display: flex; align-items: center; padding-block: calc(var(--space-40) * 2); }
+}
+/* Two columns only when the slogan fits its 600 px column on one line (Figma 198:19106) */
+@media (min-width: 1200px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr) minmax(0, var(--page-hero-card)); gap: var(--space-40); }
+  .hero h1 { font-size: min(100px, calc((min(100vw, var(--page-max)) - 2 * var(--page-gutter) - var(--space-40) - var(--page-hero-card)) / var(--page-hero-fit))); }
+}
+
+/* Question card (Ask Card on a Bento Card) */
+.ask { padding: var(--space-20); border-radius: var(--radius-3xl); max-width: 30rem; margin-inline: auto; width: 100%; }
+.ask-top { display: flex; align-items: center; gap: var(--space-8); font-family: var(--font-family-mono); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); font-weight: var(--font-weight-bold); text-transform: uppercase; color: var(--color-on-surface-variant); }
+.ask-top .grow { flex: 1; }
+.ask-top .num { color: var(--color-on-surface); font-size: var(--type-mono-label-large-size); text-transform: none; }
+.kmito-says { display: flex; gap: var(--space-12); align-items: flex-start; margin-top: var(--space-24); min-height: calc(var(--type-mono-title-line-height) * 2); }
+.kmito-says .spark { color: var(--color-on-surface-variant); }
+.kmito-line { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-title-size); line-height: var(--type-mono-title-line-height); color: var(--color-on-surface); transition: opacity var(--motion-content) var(--ease-standard); text-wrap: balance; }
+.kmito-line.is-out { opacity: 0; }
+.ask-meta { margin-top: var(--space-24); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-chip-size); line-height: var(--type-mono-chip-line-height); text-transform: uppercase; color: var(--color-on-surface-variant); }
+.ask-q { margin-top: var(--space-8); font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); }
+.options { margin-top: var(--space-16); display: grid; gap: var(--space-10); }
+
+/* Answer tile (AskOption): fill slides in on hover / focus */
+.opt {
+  position: relative; display: flex; align-items: center; gap: var(--space-12);
+  width: 100%; min-height: var(--size-option-min);
+  padding: var(--space-12) var(--space-16);
+  border: var(--size-picked-border) solid transparent; border-radius: var(--radius-lg);
+  background: var(--color-surface-variant); color: var(--color-on-surface);
+  text-align: start; cursor: pointer; overflow: hidden; isolation: isolate;
+  font-size: var(--type-body-large-size); line-height: var(--type-body-large-line-height);
+  -webkit-tap-highlight-color: transparent;
+}
+.opt::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-outline); transform: translateX(-101%); transition: transform var(--motion-page) var(--ease-standard); }
+.opt-letter { flex: none; display: grid; place-items: center; width: var(--size-letter-badge); height: var(--size-letter-badge); border-radius: var(--radius-full); background: var(--color-surface); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); transition: transform var(--motion-page) var(--ease-standard); }
+.opt-text { flex: 1; transition: transform var(--motion-page) var(--ease-standard); }
+.opt-x { flex: none; width: var(--type-icon-18-size); height: var(--type-icon-18-size); color: var(--color-on-surface-variant); opacity: 0; }
+@media (hover: hover) {
+  .opt:not([aria-disabled="true"]):hover::before { transform: translateX(0); }
+  .opt:not([aria-disabled="true"]):hover .opt-text { transform: translateX(var(--space-4)); }
+}
+.opt:not([aria-disabled="true"]):focus-visible::before { transform: translateX(0); }
+.opt:not([aria-disabled="true"]):focus-visible .opt-text { transform: translateX(var(--space-4)); }
+.opt[aria-disabled="true"] { cursor: default; }
+/* Ruled out: grey, a label and a cross. Never red. */
+.opt.is-ruled-out { background: color-mix(in srgb, var(--color-surface-variant) var(--tint-30), transparent); }
+.opt.is-ruled-out .opt-letter, .opt.is-ruled-out .opt-text { opacity: var(--tint-38); }
+.opt.is-ruled-out .opt-x { opacity: 1; }
+/* Picked: a strong border, ink badge. The slip below carries the spark. */
+.opt.is-picked { border-color: var(--color-on-surface); }
+.opt.is-picked .opt-letter { background: var(--color-on-surface); color: var(--color-surface); }
+.opt.is-dim { opacity: var(--tint-45); }
+.ask .slip { margin-top: var(--space-16); }
+.ask-reset { margin-top: var(--space-16); background: none; border: 0; padding: var(--space-8) 0; cursor: pointer; color: var(--color-on-surface-variant); font-weight: var(--font-weight-semibold); font-size: var(--type-app-button-size); }
+
+/* =====================================================================
+   6. SLIP (Slip Card, Slip Line, Punch Row)
+   ===================================================================== */
+.slip {
+  position: relative;
+  background: var(--slip-paper); color: var(--slip-ink);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-8) var(--space-20) calc(var(--space-20) + var(--size-slip-tooth) / 2);
+  font-family: var(--font-family-mono);
+  font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height);
+  /* zig-zag bottom edge, teeth 10 wide x 5 high (mask stops are alpha, not colours) */
+  -webkit-mask: conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) 50% / var(--size-slip-tooth) 100%;
+  mask: conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) 50% / var(--size-slip-tooth) 100%;
+}
+.punch-row { display: flex; justify-content: space-between; padding-inline: var(--space-4); margin-bottom: var(--space-12); }
+.punch-row span { position: relative; width: var(--size-hole); height: var(--size-hole); border-radius: var(--radius-full); border: var(--size-hole-ring) solid var(--slip-rule); background: var(--slip-paper); }
+.punch-row span::after { content: ""; position: absolute; inset: calc(var(--size-hole-ring) * -1); border-radius: inherit; background: var(--slip-hole); transform: scale(0); transition: transform var(--motion-punch) var(--ease-standard); }
+.punch-row span.is-punched::after { transform: scale(1); }
+.slip-head { display: flex; justify-content: space-between; gap: var(--space-12); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); font-weight: var(--font-weight-bold); text-transform: uppercase; margin-bottom: var(--space-12); }
+.slip-head .serial { font-weight: var(--font-weight-regular); color: var(--slip-ink-muted); text-transform: none; }
+.slip-group { font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); font-weight: var(--font-weight-bold); text-transform: uppercase; padding-block: var(--space-8) var(--space-4); }
+.slip-line { display: flex; align-items: center; gap: var(--space-6); min-height: var(--size-slip-line-min); }
+.slip-line dt { color: var(--slip-ink-muted); font-weight: var(--font-weight-regular); }
+.slip-line .leader { flex: 1; min-width: var(--space-16); height: var(--size-leader-dot); background: radial-gradient(circle, var(--slip-rule) calc(var(--size-leader-dot) / 2), transparent calc(var(--size-leader-dot) / 2 + 0.5px)) 0 50% / var(--size-leader-pitch) var(--size-leader-dot) repeat-x; }
+.slip-line dd { font-weight: var(--font-weight-bold); text-align: end; max-width: 55%; }
+.slip-rule { height: var(--size-hairline); margin-block: var(--space-8) var(--space-12); background: linear-gradient(90deg, var(--slip-rule) 50%, transparent 50%) 0 0 / calc(var(--size-dash) * 2) 100% repeat-x; }
+.slip-total { display: flex; align-items: center; gap: var(--space-12); padding-block: var(--space-8); }
+.slip-total .spark { width: var(--space-32); height: var(--space-32); color: var(--slip-spark); }
+.slip-total .big { font-size: var(--type-mono-display-small-size); line-height: var(--type-mono-display-small-line-height); font-weight: var(--font-weight-bold); }
+.slip-note { color: var(--slip-ink-muted); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); text-wrap: pretty; }
+.slip-foot { display: flex; justify-content: space-between; gap: var(--space-12); color: var(--slip-ink-muted); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); }
+.slip-stamp { display: flex; align-items: center; gap: var(--space-8); margin-top: var(--space-16); color: var(--slip-spark); font-weight: var(--font-weight-bold); text-transform: uppercase; }
+.slip-stamp .spark { color: var(--slip-spark); }
+.slip dl { margin: 0; }
+.slip dl > div { margin: 0; }
+
+/* Feeding: lines fade in and rise a third of their height */
+.motion [data-feed] { opacity: 0; transform: translateY(33%); transition: opacity var(--motion-slip-line) var(--ease-standard), transform var(--motion-slip-line) var(--ease-standard); }
+.motion [data-feed].is-in { opacity: 1; transform: none; }
+
+/* =====================================================================
+   7. RATE BAND
+   ===================================================================== */
+.rate { padding-block: var(--page-section-pad); border-block: var(--size-hairline) solid var(--color-outline); overflow: hidden; }
+.rate-line { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: var(--space-8) var(--space-24); margin-top: var(--space-24); }
+.rate-side { display: inline-flex; align-items: baseline; gap: var(--space-12); }
+.rate-big { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--page-type-rate); line-height: 1; letter-spacing: var(--type-mono-display-tracking); }
+.rate-unit { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-display-small-size); line-height: var(--type-mono-display-small-line-height); color: var(--color-on-surface-variant); }
+.rate-eq { font-family: var(--font-family-mono); font-size: var(--type-mono-display-size); color: var(--color-on-surface-variant); }
+.rate-made .rate-big, .rate-made .rate-unit { color: var(--color-accent-volt); }
+.rate-foot { margin-top: var(--space-32); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-12) var(--space-24); }
+.rate-foot .lead { color: var(--color-on-background); }
+.fine { font-size: var(--type-body-small-size); line-height: var(--type-body-small-line-height); letter-spacing: var(--type-body-small-tracking); color: var(--color-on-surface-variant); max-width: 28rem; }
+.rate .overline { text-align: center; }
+.motion .rate-side--you { transform: translateX(calc((1 - var(--p, 1)) * -18vw)); opacity: calc(0.2 + var(--p, 1) * 0.8); }
+.motion .rate-made { transform: translateX(calc((1 - var(--p, 1)) * 18vw)); opacity: calc(0.2 + var(--p, 1) * 0.8); }
+.motion .rate-eq { transform: scale(calc(0.6 + var(--p, 1) * 0.4)); opacity: var(--p, 1); }
+
+/* =====================================================================
+   8. HOW IT WORKS: pinned phone, captions scroll past
+   ===================================================================== */
+.how-grid { display: grid; gap: var(--space-40); margin-top: calc(var(--space-40) * 1.5); }
+.phone {
+  position: relative; aspect-ratio: 540 / 1105; height: 100%; max-height: 100%;
+  padding: var(--space-8); border-radius: calc(var(--radius-3xl) * 1.6);
+  background: var(--page-phone-frame);
+}
+.phone-screen { position: relative; height: 100%; border-radius: calc(var(--radius-3xl) * 1.6 - var(--space-8)); overflow: hidden; background: var(--page-phone-bezel); transform: translateZ(0); }
+.phone-screen img { position: absolute; inset: var(--space-6); width: calc(100% - var(--space-12)); height: calc(100% - var(--space-12)); border-radius: calc(var(--radius-3xl) * 1.6 - var(--space-8) - var(--space-6)); object-fit: cover; opacity: 0; transform: scale(1.04) translateY(var(--space-12)); transition: opacity var(--motion-page) var(--ease-standard), transform var(--motion-page) var(--ease-standard); }
+.phone-screen img.is-on { opacity: 1; transform: none; }
+.phone-count { margin-top: var(--space-12); text-align: center; font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); color: var(--color-on-surface-variant); }
+.how-phone { display: none; }
+.step { display: grid; grid-template-columns: minmax(0, 9rem) 1fr; gap: var(--space-20); align-items: start; padding-block: var(--space-24); border-top: var(--size-hairline) solid var(--color-outline); }
+.step-shot { border-radius: var(--radius-lg); border: var(--space-4) solid var(--page-phone-frame); padding: var(--space-4); background: var(--page-phone-bezel); }
+.step-n { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); color: var(--color-on-surface-variant); }
+.step h3 { margin-top: var(--space-8); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
+.step p { margin-top: var(--space-12); color: var(--color-on-surface-variant); max-width: var(--page-measure); }
+
+/* Motion layout: the phone pins, captions pass it */
+.motion .how-phone { display: flex; flex-direction: column; align-items: center; justify-content: center; position: sticky; top: var(--page-header-h); z-index: 2; height: 56vh; height: 56svh; padding-block: var(--space-12); }
+.motion .how-phone .phone { height: calc(100% - var(--space-32)); }
+.motion .step-shot { display: none; }
+.motion .step { grid-template-columns: 1fr; min-height: 40vh; min-height: 40svh; align-items: center; border-top: 0; position: relative; z-index: 1; }
+.motion .step-body { opacity: var(--f, 1); transform: translateY(calc((1 - var(--f, 1)) * var(--space-24))); }
+.motion .how-steps { padding-bottom: 10vh; }
+@media (min-width: 900px) {
+  .motion .how-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+  .step { grid-template-columns: minmax(0, 12rem) 1fr; }
+  .motion .how-phone { order: 2; height: calc(100vh - var(--page-header-h)); height: calc(100svh - var(--page-header-h)); padding-block: var(--space-32); }
+  .motion .step { min-height: 85vh; min-height: 85svh; align-items: center; }
+  .motion .step-body { opacity: calc(0.25 + var(--f, 1) * 0.75); }
+  .motion .how-steps { padding-bottom: 0; }
+  .step h3 { font-size: var(--type-display-small-size); line-height: var(--type-display-small-line-height); }
+  .step p { font-size: var(--type-title-large-size); line-height: var(--type-title-large-line-height); letter-spacing: 0; }
+}
+
+/* =====================================================================
+   9. SCREENSHOTS: vertical scroll drives a horizontal strip
+   ===================================================================== */
+.screens { padding-top: var(--page-section-pad); }
+.screens-stage { margin-top: var(--space-40); }
+.screens-track { display: flex; gap: var(--space-24); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-8) max(var(--page-gutter), calc((100% - var(--page-max)) / 2 + var(--page-gutter))) var(--space-24); scroll-padding-inline: var(--page-gutter); }
+.shot { flex: none; width: min(70vw, 260px); scroll-snap-align: center; }
+.shot img { border-radius: calc(var(--radius-3xl) * 1.2); border: var(--space-6) solid var(--page-phone-frame); padding: var(--space-6); background: var(--page-phone-bezel); }
+.shot figcaption { margin-top: var(--space-12); display: grid; gap: var(--space-4); }
+.shot-n { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); color: var(--color-on-surface-variant); }
+.shot-t { font-weight: var(--font-weight-bold); font-size: var(--type-title-medium-size); line-height: var(--type-title-medium-line-height); letter-spacing: var(--type-title-medium-tracking); color: var(--color-on-surface); }
+.screens-hint { margin-top: var(--space-16); }
+.screens-hint .when-motion { display: none; }
+.motion .screens-hint .when-motion { display: inline; }
+.motion .screens-hint .when-static { display: none; }
+.motion .screens-stage { position: sticky; top: var(--page-header-h); height: calc(100vh - var(--page-header-h)); height: calc(100svh - var(--page-header-h)); margin-top: 0; display: flex; align-items: center; overflow: hidden; }
+.motion .screens-track { overflow: visible; scroll-snap-type: none; padding-inline: calc(50% - var(--shot-w) / 2); --shot-w: min(64vw, calc((100svh - var(--page-header-h) - 190px) * 0.4887), 320px); will-change: transform; }
+.motion .shot { width: var(--shot-w); transform-origin: center center; }
+.motion .screens-pin { position: relative; }
+
+/* =====================================================================
+   10. THE DEAL
+   ===================================================================== */
+.deal .wrap { display: grid; gap: calc(var(--space-40) * 1.5); align-items: center; }
+.deal-copy p + p { margin-top: var(--space-16); }
+.deal-slip { max-width: 26rem; width: 100%; margin-inline: auto; }
+.motion .deal-slip { transform: translateY(calc((1 - var(--p, 1)) * var(--space-40))); }
+@media (min-width: 900px) { .deal .wrap { grid-template-columns: 1fr 1fr; } }
+
+/* =====================================================================
+   11. USE CASES (rows slide a fill in on hover / focus)
+   ===================================================================== */
+.moments-list { margin-top: calc(var(--space-40) * 1.5); border-top: var(--size-hairline) solid var(--color-outline); }
+.moment {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr; gap: var(--space-8) var(--space-16);
+  padding: var(--space-24) var(--space-16);
+  border-bottom: var(--size-hairline) solid var(--color-outline);
+}
+.moment::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-surface); transform: translateY(101%); transition: transform var(--motion-page) var(--ease-standard); }
+.moment-n { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); line-height: var(--type-headline-small-line-height); color: var(--color-on-surface-variant); transition: transform var(--motion-page) var(--ease-standard); }
+.moment-who { font-family: var(--font-family-mono); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); font-weight: var(--font-weight-bold); text-transform: uppercase; color: var(--color-on-surface-variant); }
+.moment h3 { margin-top: var(--space-4); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); text-wrap: balance; transition: transform var(--motion-page) var(--ease-standard); }
+.moment p { grid-column: 2; color: var(--color-on-surface-variant); max-width: 40rem; text-wrap: pretty; }
+@media (hover: hover) {
+  .moment:hover::before { transform: translateY(0); }
+  .moment:hover .moment-n { transform: translateX(var(--space-8)); }
+  .moment:hover h3 { transform: translateX(var(--space-8)); }
+}
+.moment:focus-visible::before { transform: translateY(0); }
+.moment:focus-visible .moment-n, .moment:focus-visible h3 { transform: translateX(var(--space-8)); }
+.moment:focus-visible { outline-offset: calc(var(--space-2) * -1); }
+@media (min-width: 900px) {
+  .moment { grid-template-columns: 4rem minmax(0, 1.1fr) minmax(0, 1fr); padding: var(--space-32) var(--space-24); align-items: start; }
+  .moment p { grid-column: 3; padding-top: var(--space-20); }
+}
+.motion .reveal { opacity: 0; transform: translateY(var(--space-24)); transition: opacity var(--motion-slip) var(--ease-standard), transform var(--motion-slip) var(--ease-standard); transition-delay: calc(var(--i, 0) * 60ms); }
+.motion .reveal.is-in { opacity: 1; transform: none; }
+
+/* =====================================================================
+   12. WHAT KMITO CANNOT STOP
+   ===================================================================== */
+.cannot-quote { font-weight: var(--type-app-screen-title-weight); font-size: var(--page-type-quote); line-height: 1.02; letter-spacing: var(--page-tracking-tight); margin-top: var(--space-24); }
+.cannot-quote span { display: block; text-wrap: balance; }
+.cannot-quote .q2 { color: var(--color-on-surface-variant); margin-top: var(--space-12); }
+.motion .cannot-quote .q1 { opacity: calc(0.25 + min(1, var(--p, 1) * 1.6) * 0.75); }
+.motion .cannot-quote .q2 { opacity: clamp(0, calc((var(--p, 1) - 0.3) * 2.2), 1); transform: translateY(calc((1 - min(1, var(--p, 1) * 1.3)) * var(--space-40))); }
+.cannot-grid { display: grid; gap: var(--space-40); margin-top: calc(var(--space-40) * 1.5); align-items: start; }
+.facts { border-top: var(--size-hairline) solid var(--color-outline); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); }
+.facts > div { display: flex; align-items: center; gap: var(--space-6); min-height: var(--size-target); border-bottom: var(--size-hairline) solid var(--color-outline); }
+.facts dt { color: var(--color-on-surface-variant); }
+.facts .leader { flex: 1; min-width: var(--space-16); height: var(--size-leader-dot); background: radial-gradient(circle, var(--color-on-surface-variant) calc(var(--size-leader-dot) / 2), transparent calc(var(--size-leader-dot) / 2 + 0.5px)) 0 50% / var(--size-leader-pitch) var(--size-leader-dot) repeat-x; opacity: var(--tint-65); }
+.facts dd { margin: 0; font-weight: var(--font-weight-bold); text-align: end; }
+.facts .spark-text { color: var(--color-accent-volt); }
+.cannot-note p + p { margin-top: var(--space-16); }
+.cannot-note .nudge { font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
+.cannot-note .kmito { display: flex; gap: var(--space-12); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-title-size); line-height: var(--type-mono-title-line-height); }
+.cannot-note .kmito .spark { color: var(--color-on-surface-variant); }
+@media (min-width: 900px) { .cannot-grid { grid-template-columns: 1fr 1fr; } }
+
+/* =====================================================================
+   13. PRIVACY FACTS
+   ===================================================================== */
+.privacy-grid { display: grid; gap: var(--space-12); margin-top: calc(var(--space-40) * 1.5); }
+.pfact { position: relative; overflow: hidden; isolation: isolate; padding: var(--space-24); border-radius: var(--radius-2xl); }
+.pfact::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-surface-variant); transform: translateX(-101%); transition: transform var(--motion-page) var(--ease-standard); }
+.pfact-label { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); text-transform: uppercase; color: var(--color-on-surface-variant); }
+.pfact-value { margin-top: var(--space-12); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); transition: transform var(--motion-page) var(--ease-standard); }
+.pfact-desc { margin-top: var(--space-12); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+@media (hover: hover) {
+  .pfact:hover::before { transform: translateX(0); }
+  .pfact:hover .pfact-value { transform: translateX(var(--space-4)); }
+}
+.pfact:focus-visible::before { transform: translateX(0); }
+.pfact:focus-visible .pfact-value { transform: translateX(var(--space-4)); }
+.privacy-more { margin-top: var(--space-24); }
+@media (min-width: 640px) { .privacy-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1040px) { .privacy-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* =====================================================================
+   14. CALL TO ACTION AND FOOTER
+   ===================================================================== */
+.cta { text-align: center; border-top: var(--size-hairline) solid var(--color-outline); }
+.cta-line { font-weight: var(--type-app-screen-title-weight); font-size: var(--page-type-hero); line-height: var(--page-type-hero-line); letter-spacing: var(--page-tracking-hero); text-wrap: balance; }
+.motion .cta-line { transform: scale(calc(0.92 + var(--p, 1) * 0.08)); opacity: calc(0.3 + var(--p, 1) * 0.7); }
+.cta .lead { margin: var(--space-24) auto 0; }
+.cta-actions { margin-top: var(--space-40); display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
+.cta .fine { margin-inline: auto; }
+.site-footer { border-top: var(--size-hairline) solid var(--color-outline); padding-block: var(--space-40); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+.site-footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-16) var(--space-24); }
+.footer-links { display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-24); color: var(--color-on-surface); }
+.footer-links .link { min-height: var(--size-target); display: inline-flex; align-items: center; }
+.footer-links .link::before, .footer-links .link::after { bottom: var(--space-10); }
+
+/* =====================================================================
+   15. HERO DEPTH AND ENTRY (motion only)
+   ===================================================================== */
+.motion .hero-copy { transform: translateY(calc(var(--p, 0) * var(--space-40) * 1.5)); opacity: calc(1 - var(--p, 0) * 0.7); }
+.motion .hero-stage .ask { transform: translateY(calc(var(--p, 0) * var(--space-40) * -1.5)) rotateX(calc(var(--p, 0) * 14deg)) scale(calc(1 - var(--p, 0) * 0.06)); transform-origin: 50% 0; }
+.motion .hero-stage { animation: rise var(--motion-slip) var(--ease-standard) both 120ms; }
+.motion .hero-copy h1 span { animation: rise var(--motion-slip) var(--ease-standard) both; }
+.motion .hero-copy h1 span + span { animation-delay: 90ms; }
+@keyframes rise { from { opacity: 0; transform: translateY(var(--space-24)); } }
+
+/* Reduced motion: a complete static page. No transitions, no animations. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"><div class="glow__blob glow__blob--big" data-glow="big"></div><div class="glow__blob" data-glow="small"></div></div>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- Spark Mark ("k") and logo, defined once -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M6.5 3.5v17M17.5 8.5l-8 6.6M11.6 13.4l6.4 7.1" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M299.05,59.15A200,200 0 0,1 445.07,180.04A73.25,73.25 0 0,0 397.92,187.81A153.75,153.75 0 0,0 290.22,104.55A40.5,40.5 0 0,0 299.05,59.15Z M447.57,323.99A200,200 0 0,1 296.86,451.78A40.5,40.5 0 0,0 288.55,406.28A153.75,153.75 0 0,0 400.18,317.86A73.25,73.25 0 0,0 447.57,323.99Z M223.18,451.88A200,200 0 0,1 72.39,325.22A73.25,73.25 0 0,0 117.77,314.24A153.75,153.75 0 0,0 231.37,406.36A40.5,40.5 0 0,0 223.18,451.88Z M74.81,179.11A200,200 0 0,1 225.37,58.23A40.5,40.5 0 0,0 233.06,103.83A153.75,153.75 0 0,0 119.8,191.58A73.25,73.25 0 0,0 74.81,179.11Z M38.25,252.25A40.5,40.5 0 1,1 119.25,252.25A40.5,40.5 0 1,1 38.25,252.25Z M392.25,252.25A40.5,40.5 0 1,1 473.25,252.25A40.5,40.5 0 1,1 392.25,252.25Z M173.25,255.25A86.5,86.5 0 1,1 346.25,255.25A86.5,86.5 0 1,1 173.25,255.25Z M219,255.25A40.75,40.75 0 1,0 300.5,255.25A40.75,40.75 0 1,0 219,255.25Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Kmito, back to top">
+      <svg aria-hidden="true"><use href="#i-logo"/></svg>
+      <span>Kmito</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a class="link" href="#how">How it works</a>
+      <a class="link" href="#deal">The Deal</a>
+      <a class="link" href="#cannot">Limits</a>
+      <a class="link" href="#privacy">Privacy</a>
+    </nav>
+    <div class="header-end">
+      <div class="punch-progress" aria-hidden="true" data-progress>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to light theme">
+        <svg class="icon-now" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon-next" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <a class="btn btn--outline header-get" href="#get" data-store-link>
+        <span class="btn__text">Get Kmito</span>
+        <span class="btn__wipe" aria-hidden="true"><span class="btn__wipe-text"></span></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top" data-p="exit" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="overline">Kmito for Android</p>
+      <h1 id="hero-title"><span>One question</span> <span class="spark-text">first.</span></h1>
+      <p class="lead">A right answer makes <span class="num">10 min</span> of screen time.</p>
+      <div class="hero-try">
+        <span>Try it here. A wrong answer costs nothing.</span>
+        <a class="link" href="#how">See how it works</a>
+      </div>
+    </div>
+
+    <div class="hero-stage">
+      <div class="card ask" data-quiz role="group" aria-label="Try one question">
+        <div class="ask-top">
+          <span>Balance</span><span class="grow" aria-hidden="true"></span>
+          <span class="num"><span data-balance>0</span> min</span>
+        </div>
+        <div class="kmito-says">
+          <span class="spark" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <p class="kmito-line" data-kmito-line aria-live="polite"
+             data-wrong="Not this one. No cost. Look again."
+             data-right="Every month has 28 days. Some just have more.">Your minutes ran out. One question.</p>
+        </div>
+        <p class="ask-meta">Lateral logic · Easy</p>
+        <p class="ask-q" id="ask-q">Which month has 28 days?</p>
+        <div class="options" role="group" aria-labelledby="ask-q">
+          <button class="opt" type="button" data-option><span class="opt-letter" aria-hidden="true">A</span><span class="opt-text">February</span><svg class="opt-x" aria-hidden="true"><use href="#i-x"/></svg><span class="sr-only" data-ruled-label hidden>, dimmed, not this one</span></button>
+          <button class="opt" type="button" data-option data-correct="true"><span class="opt-letter" aria-hidden="true">B</span><span class="opt-text">All of them</span><svg class="opt-x" aria-hidden="true"><use href="#i-x"/></svg></button>
+          <button class="opt" type="button" data-option><span class="opt-letter" aria-hidden="true">C</span><span class="opt-text">June</span><svg class="opt-x" aria-hidden="true"><use href="#i-x"/></svg><span class="sr-only" data-ruled-label hidden>, dimmed, not this one</span></button>
+          <button class="opt" type="button" data-option><span class="opt-letter" aria-hidden="true">D</span><span class="opt-text">None</span><svg class="opt-x" aria-hidden="true"><use href="#i-x"/></svg><span class="sr-only" data-ruled-label hidden>, dimmed, not this one</span></button>
+        </div>
+
+        <div class="slip" data-quiz-slip hidden>
+          <div class="punch-row" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <h2 class="slip-head" data-feed>Made by you</h2>
+          <div class="slip-total" data-feed>
+            <span class="spark" aria-hidden="true" data-spark><svg><use href="#i-logo"/></svg></span>
+            <span class="big">+10 min</span>
+          </div>
+          <dl>
+            <div class="slip-line" data-feed><dt>One right answer</dt><span class="leader" aria-hidden="true"></span><dd>+10 min</dd></div>
+            <div class="slip-line" data-feed><dt>Cost</dt><span class="leader" aria-hidden="true"></span><dd>1 thought</dd></div>
+          </dl>
+        </div>
+        <button class="ask-reset link" type="button" data-quiz-reset hidden>Start over</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATE -->
+<section class="rate" id="rate" data-p="enter" aria-labelledby="rate-title">
+  <div class="wrap">
+    <h2 class="overline" id="rate-title">The rate</h2>
+    <p class="rate-line">
+      <span class="rate-side rate-side--you"><span class="rate-big">1</span><span class="rate-unit">right answer</span></span>
+      <span class="rate-eq" aria-hidden="true">=</span><span class="sr-only">equals</span>
+      <span class="rate-side rate-made"><span class="rate-big">10</span><span class="rate-unit">min</span></span>
+    </p>
+    <div class="rate-foot">
+      <p class="lead">You think, it opens.</p>
+      <p class="fine">Standard preset. Strict gives <span class="num">5 min</span>, Generous gives <span class="num">15 min</span>. Same rate every day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="overline">How it works</p>
+      <h2 class="h2" id="how-title">Your phone runs on minutes. You make them.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-phone" aria-hidden="true">
+        <div class="phone">
+          <div class="phone-screen" data-phone>
+            <img class="is-on" src="landing-assets/how-1-answer.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-2-minutes.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-3-warning.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-4-zero.jpg" alt="" width="540" height="1105">
+          </div>
+        </div>
+        <p class="phone-count"><span data-phone-count>01</span> / 04</p>
+      </div>
+      <ol class="how-steps" data-steps>
+        <li class="step">
+          <img class="step-shot" src="landing-assets/how-1-answer.jpg" alt="A wrong answer is greyed out. Kmito says: Not this one. No cost. Look again." width="540" height="1105" loading="lazy" decoding="async">
+          <div class="step-body">
+            <p class="step-n">01</p>
+            <h3>Answer one question.</h3>
+            <p>Four answers, one right. A wrong one costs nothing. Look again.</p>
+          </div>
+        </li>
+        <li class="step">
+          <img class="step-shot" src="landing-assets/how-2-minutes.jpg" alt="The right answer prints a slip: made by you, 10 min." width="540" height="1105" loading="lazy" decoding="async">
+          <div class="step-body">
+            <p class="step-n">02</p>
+            <h3>Make <span class="num">10 min</span>.</h3>
+            <p>A right answer adds <span class="num">10 min</span> to your balance. Only screen-on time is counted.</p>
+          </div>
+        </li>
+        <li class="step">
+          <img class="step-shot" src="landing-assets/how-3-warning.jpg" alt="A notification: almost out of screen time, 1 min left. Answer a quiz now to earn more." width="540" height="1105" loading="lazy" decoding="async">
+          <div class="step-body">
+            <p class="step-n">03</p>
+            <h3>Get a warning first.</h3>
+            <p>At <span class="num">5 min</span> and at <span class="num">1 min</span>. One answer now saves the interruption.</p>
+          </div>
+        </li>
+        <li class="step">
+          <img class="step-shot" src="landing-assets/how-4-zero.jpg" alt="A slip: one right answer, 10 min. One minute of screen, 1 min. At zero, I ask again." width="540" height="1105" loading="lazy" decoding="async">
+          <div class="step-body">
+            <p class="step-n">04</p>
+            <h3>At zero, one question.</h3>
+            <p>The phone asks again. Calls and alarms are never covered.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screens" id="screens" aria-labelledby="screens-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="overline">On the phone</p>
+      <h2 class="h2" id="screens-title">The whole idea, in seven screens.</h2>
+      <p class="fine screens-hint"><span class="when-motion">Keep scrolling. The screens move with you.</span><span class="when-static">Scroll the row sideways to see all seven.</span></p>
+    </div>
+  </div>
+  <div class="screens-pin" data-screens>
+    <div class="screens-stage">
+      <div class="screens-track" data-track role="region" aria-label="Screenshots" tabindex="0">
+        <figure class="shot"><img src="landing-assets/screen-1-opener.jpg" alt="A question about haystacks, with four answers. Kmito says: One question before anything else." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">1 / 7</span><span class="shot-t">The first screen is a question.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-2-quiz.jpg" alt="A quiz: What is 10 times 8? Balance 2 min. A right answer adds 10 min." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">2 / 7</span><span class="shot-t">A right answer adds 10 min.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-3-numpad.jpg" alt="The same question on a speed numpad." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">3 / 7</span><span class="shot-t">Speed math on a keypad.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-4-game.jpg" alt="A light puzzle: tap a mirror to light the target." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">4 / 7</span><span class="shot-t">Logic, without words.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-5-your-turn.jpg" alt="You ask, Kmito answers: Can I switch you off? What if someone calls?" width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">5 / 7</span><span class="shot-t">Then you ask. Kmito answers.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-6-permissions.jpg" alt="Each permission with its promise: I warn you at 5 minutes and at 1 minute." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">6 / 7</span><span class="shot-t">Each permission comes with a promise.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-7-deal.jpg" alt="The Deal slip: your rules, then Kmito's promises." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">7 / 7</span><span class="shot-t">The Deal, fitted to your week.</span></figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE DEAL -->
+<section class="section deal" id="deal" aria-labelledby="deal-title">
+  <div class="wrap">
+    <div class="deal-copy">
+      <p class="overline">The Deal</p>
+      <h2 class="h2" id="deal-title">A deal, in writing.</h2>
+      <p class="lead" style="margin-top: var(--space-16)">Your rules on one side. Kmito's promises on the other.</p>
+      <p class="lead">You change the lines. You sign with one last question: Deal?</p>
+    </div>
+
+    <div class="slip deal-slip" data-p="slip" data-slip-scroll>
+      <div class="punch-row" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="slip-head" data-feed><h3 style="font:inherit">The Deal</h3><span class="serial">No. 0001</span></div>
+      <p class="slip-group" data-feed>You</p>
+      <dl>
+        <div class="slip-line" data-feed><dt>One right answer</dt><span class="leader" aria-hidden="true"></span><dd>10 min</dd></div>
+        <div class="slip-line" data-feed><dt>I ask</dt><span class="leader" aria-hidden="true"></span><dd>at zero</dd></div>
+        <div class="slip-line" data-feed><dt>Always free</dt><span class="leader" aria-hidden="true"></span><dd>apps you pick</dd></div>
+      </dl>
+      <div class="slip-rule" data-feed aria-hidden="true"></div>
+      <p class="slip-group" data-feed>Kmito</p>
+      <dl>
+        <div class="slip-line" data-feed><dt>Warns you at</dt><span class="leader" aria-hidden="true"></span><dd>5 and 1 min</dd></div>
+        <div class="slip-line" data-feed><dt>Calls and alarms</dt><span class="leader" aria-hidden="true"></span><dd>never covered</dd></div>
+        <div class="slip-line" data-feed><dt>Counts only</dt><span class="leader" aria-hidden="true"></span><dd>screen on</dd></div>
+        <div class="slip-line" data-feed><dt>Every minute</dt><span class="leader" aria-hidden="true"></span><dd>in the ledger</dd></div>
+        <div class="slip-line" data-feed><dt>Leaving in a hurry</dt><span class="leader" aria-hidden="true"></span><dd>3 a day, 10 min each</dd></div>
+        <div class="slip-line" data-feed><dt>Can't stop</dt><span class="leader" aria-hidden="true"></span><dd>force stop, uninstall</dd></div>
+      </dl>
+      <div class="slip-rule" data-feed aria-hidden="true"></div>
+      <p class="slip-note" data-feed>I'm a strong nudge, not a wall. The rest is your half of the deal.</p>
+      <p class="slip-stamp" data-feed><span class="spark" aria-hidden="true" data-spark><svg><use href="#i-logo"/></svg></span>Deal?</p>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="section moments" id="moments" aria-labelledby="moments-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="overline">Seven moments</p>
+      <h2 class="h2" id="moments-title">A moment in a day, not a feature.</h2>
+    </div>
+    <ol class="moments-list">
+      <li class="moment reveal" tabindex="0" style="--i:0">
+        <span class="moment-n" aria-hidden="true">01</span>
+        <div><p class="moment-who">The reflex reach</p><h3>Before the feed: one question first.</h3></div>
+        <p>Balance for the whole phone. The lock comes only at zero, after warnings at <span class="num">5 min</span> and at <span class="num">1 min</span>.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:1">
+        <span class="moment-n" aria-hidden="true">02</span>
+        <div><p class="moment-who">The exam in four months</p><h3>Every unlock is one exam question.</h3></div>
+        <p>English B2 pack with explanations in Ukrainian. Missed questions come back in the review deck.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:2">
+        <span class="moment-n" aria-hidden="true">03</span>
+        <div><p class="moment-who">The night scroll</p><h3>After <span class="num">23:00</span>, the phone asks first. Calls still come through.</h3></div>
+        <p>Schedules for a night window. The lock steps aside for calls and alarms, and no minutes drain meanwhile.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:3">
+        <span class="moment-n" aria-hidden="true">04</span>
+        <div><p class="moment-who">The puzzle habit</p><h3>Your daily tactics, at the door of your phone.</h3></div>
+        <p>Chess on a real board, speed math on a keypad, logic, physics, algorithms. A skill rating per category.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:4">
+        <span class="moment-n" aria-hidden="true">05</span>
+        <div><p class="moment-who">The careful starter</p><h3>Start with your usual day. Lose a little each week.</h3></div>
+        <p>Easy start: minutes on the house that shrink week by week, a soft lock first, each step announced a day ahead.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:5">
+        <span class="moment-n" aria-hidden="true">06</span>
+        <div><p class="moment-who">The busy phone</p><h3>Maps, bank and work chat stay free. Only the feed costs minutes.</h3></div>
+        <p>Kmito reads the last week of use on the phone and suggests always-free apps and daily limits.</p>
+      </li>
+      <li class="moment reveal" tabindex="0" style="--i:6">
+        <span class="moment-n" aria-hidden="true">07</span>
+        <div><p class="moment-who">The promise kept</p><h3>Tightening is instant. Loosening waits <span class="num">24 h</span>.</h3></div>
+        <p>Commitment mode delays every change that weakens the lock. A partner PIN puts the key in a friend's hands.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- WHAT KMITO CANNOT STOP -->
+<section class="section cannot" id="cannot" data-p="enter" aria-labelledby="cannot-title">
+  <div class="wrap">
+    <h2 class="overline" id="cannot-title">What Kmito can't stop</h2>
+    <p class="cannot-quote"><span class="q1">I can't stop you from uninstalling me.</span><span class="q2">I can ask one good question first.</span></p>
+    <div class="cannot-grid">
+      <dl class="facts">
+        <div><dt>Force stop</dt><span class="leader" aria-hidden="true"></span><dd>you win</dd></div>
+        <div><dt>Uninstall</dt><span class="leader" aria-hidden="true"></span><dd>you win</dd></div>
+        <div><dt>Safe mode</dt><span class="leader" aria-hidden="true"></span><dd>can't stop it</dd></div>
+        <div><dt>What I can do</dt><span class="leader" aria-hidden="true"></span><dd class="spark-text">ask first</dd></div>
+      </dl>
+      <div class="cannot-note">
+        <p class="nudge">A strong nudge, not a wall.</p>
+        <p class="lead">Kmito says this before it asks for any permission. The rest is your half of the deal.</p>
+        <p class="kmito"><span class="spark" aria-hidden="true"><svg><use href="#i-logo"/></svg></span><span>Found a way around me? Good. <a class="link" href="mailto:kellyideas.team@gmail.com">Tell me how.</a></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="section privacy" id="privacy" aria-labelledby="privacy-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="overline">Privacy</p>
+      <h2 class="h2" id="privacy-title">Your progress stays on your phone.</h2>
+    </div>
+    <ul class="privacy-grid">
+      <li class="card pfact reveal" tabindex="0" style="--i:0">
+        <p class="pfact-label">Account</p>
+        <p class="pfact-value">none</p>
+        <p class="pfact-desc">Nothing to sign up for.</p>
+      </li>
+      <li class="card pfact reveal" tabindex="0" style="--i:1">
+        <p class="pfact-label">Ads</p>
+        <p class="pfact-value">none</p>
+        <p class="pfact-desc">No advertising SDKs in the app.</p>
+      </li>
+      <li class="card pfact reveal" tabindex="0" style="--i:2">
+        <p class="pfact-label">Your progress</p>
+        <p class="pfact-value">on this phone</p>
+        <p class="pfact-desc">Answers, minutes, streaks and settings stay in the app's own storage.</p>
+      </li>
+      <li class="card pfact reveal" tabindex="0" style="--i:3">
+        <p class="pfact-label">Usage data</p>
+        <p class="pfact-value">off until you opt in</p>
+        <p class="pfact-desc">Anonymous. Never your name, email, answers or the names of your apps.</p>
+      </li>
+    </ul>
+    <p class="privacy-more"><a class="link" href="privacy.html">Read the privacy policy</a></p>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="section cta" id="get" data-p="enter" aria-labelledby="get-title">
+  <div class="wrap">
+    <h2 class="cta-line" id="get-title">One question first.</h2>
+    <p class="lead">A fair deal with your phone.</p>
+    <div class="cta-actions">
+      <a class="btn btn--primary btn--hero" href="#get" data-store-link>
+        <span class="btn__slide"><span class="btn__line">Get Kmito</span><span class="btn__line" aria-hidden="true">on Google Play</span></span>
+      </a>
+      <p class="fine">For Android phones. No account, no ads.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Kmito by Kelly Ideas</span>
+    <nav class="footer-links" aria-label="Footer">
+      <a class="link" href="privacy.html">Privacy policy</a>
+      <a class="link" href="mailto:kellyideas.team@gmail.com">Contact</a>
+    </nav>
+    <span class="fine">Screens from the app on a test phone.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  /* The Google Play listing of the Play edition. */
+  const STORE_URL = 'https://play.google.com/store/apps/details?id=io.github.kellyideas.kmito';
+
+  const root = document.documentElement;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let motion = !reduce.matches;
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+  /* ---------- store links ---------- */
+  document.querySelectorAll('[data-store-link]').forEach(a => a.setAttribute('href', STORE_URL));
+  document.querySelectorAll('.btn--outline').forEach(b => {
+    const text = b.querySelector('.btn__text');
+    const copy = b.querySelector('.btn__wipe-text');
+    if (text && copy) copy.textContent = text.textContent;
+  });
+
+  /* ---------- in-page links ----------
+     Handled here so they also work where the browser refuses fragment
+     navigation (a page shown from a data: URL, some previews). */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const id = decodeURIComponent(a.getAttribute('href').slice(1));
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: motion ? 'smooth' : 'auto', block: 'start' });
+    if (!target.hasAttribute('tabindex') && !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(target.tagName)) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    try { history.pushState(null, '', '#' + id); } catch (err) {}
+  });
+
+  /* ---------- scrollbars: stronger while scrolling ---------- */
+  let scrollIdle = 0;
+  window.addEventListener('scroll', () => {
+    root.classList.add('is-scrolling');
+    clearTimeout(scrollIdle);
+    scrollIdle = setTimeout(() => root.classList.remove('is-scrolling'), 900);
+  }, { passive: true });
+
+  /* ---------- lime glow: two bodies on springs ----------
+     F = k * (target - x) - c * v, a = F / m. The heavy body answers slowly and
+     swings past the target; it also reaches only part of the way from the
+     middle of the screen, so the two parts drift apart and back together. */
+  const glowLayer = document.querySelector('.glow');
+  const body = (el, m, k, c, reach) => ({ el, m, k, c, reach, x: innerWidth * 0.7, y: innerHeight * 0.3, vx: 0, vy: 0 });
+  const bodies = [
+    body(document.querySelector('[data-glow="big"]'), 7, 0.05, 0.95, 0.55),
+    body(document.querySelector('[data-glow="small"]'), 1, 0.06, 0.36, 1)
+  ];
+  const glowSmall = bodies[1];
+  const aim = { x: innerWidth * 0.7, y: innerHeight * 0.3, pointerAt: 0 };
+  let glowRunning = false, glowLast = 0;
+  const targetOf = b => ({
+    x: innerWidth / 2 + (aim.x - innerWidth / 2) * b.reach,
+    y: innerHeight / 2 + (aim.y - innerHeight / 2) * b.reach
+  });
+  const place = b => { b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0)`; };
+  const glowTick = now => {
+    const s = Math.min(2, (now - glowLast) / 16.67 || 1);   // frames since last tick
+    glowLast = now;
+    let moving = false;
+    bodies.forEach(b => {
+      const t = targetOf(b);
+      b.vx += ((b.k * (t.x - b.x) - b.c * b.vx) / b.m) * s;
+      b.vy += ((b.k * (t.y - b.y) - b.c * b.vy) / b.m) * s;
+      b.x += b.vx * s; b.y += b.vy * s;
+      place(b);
+      if (Math.abs(t.x - b.x) > 0.5 || Math.abs(t.y - b.y) > 0.5 || Math.abs(b.vx) > 0.05 || Math.abs(b.vy) > 0.05) moving = true;
+    });
+    if (moving) requestAnimationFrame(glowTick);
+    else glowRunning = false;   // both at rest: no endless loop
+  };
+  const glowTo = (x, y) => {
+    aim.x = x; aim.y = y;
+    if (!motion) { bodies.forEach(b => { const t = targetOf(b); b.x = t.x; b.y = t.y; b.vx = b.vy = 0; place(b); }); return; }
+    if (!glowRunning) { glowRunning = true; glowLast = performance.now(); requestAnimationFrame(glowTick); }
+  };
+  // A mouse or pen leads it. On touch screens, scrolling moves it in a slow figure.
+  window.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch' || !motion) return;
+    aim.pointerAt = performance.now(); glowTo(e.clientX, e.clientY);
+  }, { passive: true });
+  window.addEventListener('scroll', () => {
+    if (!motion || performance.now() - aim.pointerAt < 4000) return;
+    const t = scrollY / 900;
+    glowTo(innerWidth * (0.5 + 0.32 * Math.sin(t)), innerHeight * (0.42 + 0.22 * Math.sin(t * 1.7)));
+  }, { passive: true });
+  bodies.forEach(place);
+  requestAnimationFrame(() => glowLayer.classList.add('is-on'));
+  const glowFlash = () => { if (motion) flash(glowSmall.el); };
+
+  /* ---------- theme ---------- */
+  const themeBtn = document.querySelector('[data-theme-toggle]');
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const currentTheme = () => root.getAttribute('data-theme') || (sysDark.matches ? 'dark' : 'light');
+  const paintThemeButton = () => {
+    const now = currentTheme();
+    const icons = themeBtn.querySelectorAll('use');
+    icons[0].setAttribute('href', now === 'dark' ? '#i-moon' : '#i-sun');
+    icons[1].setAttribute('href', now === 'dark' ? '#i-sun' : '#i-moon');
+    themeBtn.setAttribute('aria-label', now === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  };
+  themeBtn.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kmito-theme', next); } catch (e) {}
+    paintThemeButton();
+  });
+  sysDark.addEventListener('change', paintThemeButton);
+  paintThemeButton();
+
+  /* ---------- the question in the hero ---------- */
+  const quiz = document.querySelector('[data-quiz]');
+  const kLine = quiz.querySelector('[data-kmito-line]');
+  const startLine = kLine.textContent;
+  const options = [...quiz.querySelectorAll('[data-option]')];
+  const qSlip = quiz.querySelector('[data-quiz-slip]');
+  const balance = quiz.querySelector('[data-balance]');
+  const resetBtn = quiz.querySelector('[data-quiz-reset]');
+  let timers = [];
+
+  const say = text => {
+    if (!motion) { kLine.textContent = text; return; }
+    kLine.classList.add('is-out');
+    timers.push(setTimeout(() => { kLine.textContent = text; kLine.classList.remove('is-out'); }, 180));
+  };
+  const flash = el => { el.classList.remove('is-flash'); void el.offsetWidth; el.classList.add('is-flash'); };
+  const countTo = (el, to) => {
+    if (!motion) { el.textContent = to; return; }
+    const t0 = performance.now(), dur = 400;
+    const step = t => { const k = clamp((t - t0) / dur); el.textContent = Math.round(k * to); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  const printQuizSlip = () => {
+    const lines = [...qSlip.querySelectorAll('[data-feed]')];
+    const holes = qSlip.querySelectorAll('.punch-row span');
+    qSlip.hidden = false;
+    if (!motion) { lines.forEach(l => l.classList.add('is-in')); holes[0].classList.add('is-punched'); return; }
+    lines.forEach((l, i) => timers.push(setTimeout(() => l.classList.add('is-in'), 150 + i * 120)));
+    timers.push(setTimeout(() => { holes[0].classList.add('is-punched'); flash(qSlip.querySelector('[data-spark]')); }, 150 + lines.length * 120));
+  };
+
+  options.forEach(btn => btn.addEventListener('click', () => {
+    if (btn.getAttribute('aria-disabled') === 'true' || quiz.dataset.state === 'done') return;
+    if (btn.dataset.correct === 'true') {
+      quiz.dataset.state = 'done';
+      btn.classList.add('is-picked');
+      btn.setAttribute('aria-pressed', 'true');
+      options.forEach(o => { if (o !== btn) { o.setAttribute('aria-disabled', 'true'); if (!o.classList.contains('is-ruled-out')) o.classList.add('is-dim'); } });
+      say(kLine.dataset.right);
+      printQuizSlip();
+      glowFlash();
+      countTo(balance, 10);
+      resetBtn.hidden = false;
+    } else {
+      btn.classList.add('is-ruled-out');
+      btn.setAttribute('aria-disabled', 'true');
+      const lbl = btn.querySelector('[data-ruled-label]'); if (lbl) lbl.hidden = false;
+      say(kLine.dataset.wrong);
+    }
+  }));
+  resetBtn.addEventListener('click', () => {
+    timers.forEach(clearTimeout); timers = [];
+    delete quiz.dataset.state;
+    options.forEach(o => {
+      o.classList.remove('is-picked', 'is-ruled-out', 'is-dim');
+      o.removeAttribute('aria-disabled'); o.removeAttribute('aria-pressed');
+      const lbl = o.querySelector('[data-ruled-label]'); if (lbl) lbl.hidden = true;
+    });
+    qSlip.hidden = true;
+    qSlip.querySelectorAll('[data-feed]').forEach(l => l.classList.remove('is-in'));
+    qSlip.querySelectorAll('.punch-row span').forEach(h => h.classList.remove('is-punched'));
+    kLine.textContent = startLine; kLine.classList.remove('is-out');
+    balance.textContent = '0';
+    resetBtn.hidden = true;
+    options[0].focus();
+  });
+
+  /* ---------- scroll: one read pass, one write pass per frame ---------- */
+  const header = document.querySelector('.site-header');
+  const progressHoles = [...document.querySelectorAll('[data-progress] span')];
+  const progressSections = ['how', 'screens', 'deal', 'moments', 'cannot', 'privacy'].map(id => document.getElementById(id));
+  const pEls = [...document.querySelectorAll('[data-p]')];
+  const steps = [...document.querySelectorAll('[data-steps] .step')];
+  const phoneImgs = [...document.querySelectorAll('[data-phone] img')];
+  const phoneCount = document.querySelector('[data-phone-count]');
+  const phoneBox = document.querySelector('.how-phone');
+  const pin = document.querySelector('[data-screens]');
+  const track = document.querySelector('[data-track]');
+  const shots = [...track.querySelectorAll('.shot')];
+  const dealSlip = document.querySelector('[data-slip-scroll]');
+  const dealLines = [...dealSlip.querySelectorAll('[data-feed]')];
+  const dealHoles = [...dealSlip.querySelectorAll('.punch-row span')];
+  const dealSpark = dealSlip.querySelector('[data-spark]');
+  let dealFlashed = false;
+  let trackDistance = 0;
+  let activeStep = -1;
+  let queued = false;
+
+  const measure = () => {
+    if (motion) {
+      pin.style.height = '';
+      const stageW = track.parentElement.clientWidth;
+      trackDistance = Math.max(0, track.scrollWidth - stageW);
+      pin.style.height = (track.parentElement.clientHeight + trackDistance) + 'px';
+    } else {
+      pin.style.height = '';
+      track.style.transform = '';
+      shots.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    }
+  };
+
+  const update = () => {
+    queued = false;
+    const vh = window.innerHeight;
+    const headH = header.offsetHeight;
+
+    // Header punch row: one hole per section passed
+    progressSections.forEach((s, i) => {
+      const on = s && s.getBoundingClientRect().top < vh * 0.5;
+      progressHoles[i].classList.toggle('is-punched', !!on);
+    });
+    if (!motion) return;
+
+    // Section progress values
+    pEls.forEach(el => {
+      const r = el.getBoundingClientRect();
+      let p;
+      if (el.dataset.p === 'exit') p = clamp((headH - r.top) / Math.max(1, r.height * 0.9));
+      else if (el.dataset.p === 'slip') p = clamp((vh * 0.9 - r.top) / (vh * 0.6));
+      else p = clamp((vh - r.top) / (vh * 0.6));
+      el.style.setProperty('--p', p.toFixed(3));
+    });
+
+    // Pinned phone: the caption nearest the reading line wins
+    const phoneBottom = phoneBox.getBoundingClientRect().bottom;
+    const wide = window.innerWidth >= 900;
+    const focusY = wide ? vh * 0.5 : (phoneBottom + vh) / 2;
+    let best = 0, bestD = Infinity;
+    steps.forEach((li, i) => {
+      const body = li.querySelector('.step-body');
+      const r = body.getBoundingClientRect();
+      const c = r.top + r.height / 2;
+      const d = Math.abs(c - focusY);
+      if (d < bestD) { bestD = d; best = i; }
+      // On narrow screens a caption fades out before it slides under the pinned phone
+      const f = wide ? clamp(1 - d / (vh * 0.45)) : Math.min(clamp((r.top - phoneBottom) / 80), clamp(1 - d / (vh * 0.35)));
+      li.style.setProperty('--f', f.toFixed(3));
+    });
+    if (best !== activeStep) {
+      activeStep = best;
+      phoneImgs.forEach((img, i) => img.classList.toggle('is-on', i === best));
+      phoneCount.textContent = String(best + 1).padStart(2, '0');
+    }
+
+    // Screenshot strip: vertical scroll moves it sideways, cards turn with depth
+    const pr = pin.getBoundingClientRect();
+    const sp = clamp((headH - pr.top) / Math.max(1, trackDistance));
+    const x = sp * trackDistance;
+    track.style.transform = `translate3d(${-x}px,0,0)`;
+    const stageW = track.parentElement.clientWidth;
+    shots.forEach(s => {
+      const cx = s.offsetLeft + s.offsetWidth / 2 - x;
+      const d = clamp((cx - stageW / 2) / stageW, -1, 1);
+      s.style.transform = `perspective(1000px) rotateY(${(-d * 18).toFixed(2)}deg) scale(${(1 - Math.abs(d) * 0.12).toFixed(3)})`;
+      s.style.opacity = (1 - Math.abs(d) * 0.45).toFixed(3);
+    });
+
+    // The Deal prints line by line as it enters; holes punch as it prints
+    const dp = parseFloat(dealSlip.style.getPropertyValue('--p')) || 0;
+    const shown = Math.round(dp * dealLines.length);
+    dealLines.forEach((l, i) => l.classList.toggle('is-in', i < shown));
+    const punched = Math.floor(dp * dealHoles.length + 0.001);
+    dealHoles.forEach((h, i) => h.classList.toggle('is-punched', i < punched));
+    if (dp >= 0.999 && !dealFlashed) { dealFlashed = true; flash(dealSpark); }
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+
+  /* ---------- reveal on enter (one way) ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  let io = null;
+  const startReveal = () => {
+    if (io) io.disconnect();
+    if (!motion || !('IntersectionObserver' in window)) { revealEls.forEach(el => el.classList.add('is-in')); return; }
+    io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    revealEls.forEach(el => { if (!el.classList.contains('is-in')) io.observe(el); });
+  };
+
+  /* ---------- motion on / off ---------- */
+  const applyMotion = () => {
+    motion = !reduce.matches;
+    root.classList.toggle('motion', motion);
+    if (!motion) {
+      pEls.forEach(el => el.style.removeProperty('--p'));
+      steps.forEach(li => li.style.removeProperty('--f'));
+      dealLines.forEach(l => l.classList.add('is-in'));
+      dealHoles.forEach(h => h.classList.add('is-punched'));
+    }
+    measure();
+    startReveal();
+    queue();
+  };
+  reduce.addEventListener('change', applyMotion);
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', () => { measure(); queue(); });
+  window.addEventListener('load', () => { measure(); queue(); });
+  applyMotion();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "id": "pack_reading_ua_7_9",
+  "title": "Reading in Ukrainian (7–9)",
+  "subtitle": "Read and answer, missing letters, the right word, sayings and spelling. Every task is in Ukrainian",
+  "category": "VOCABULARY",
+  "author": "Kmito Junior Academy",
+  "version": "1.0.0",
+  "difficultyLabel": "Ages 7–9 • Reading in Ukrainian",
+  "accentHex": "#F97316",
+  "ageGroup": "AGES_7_9",
+  "iqTarget": "WARMUP_100",
+  "subject": "READING",
+  "baseLanguage": "ua"
+}

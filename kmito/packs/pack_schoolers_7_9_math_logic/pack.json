@@ -1,0 +1,13 @@
+{
+  "id": "pack_schoolers_7_9_math_logic",
+  "title": "Junior Scholars (7–9 yrs): Fun Math & Brain Riddles",
+  "subtitle": "Grades 2–4 multiplication, square perimeters, coins, clock puzzles & animal riddles",
+  "category": "MATH",
+  "author": "Kmito Junior Academy",
+  "version": "2.0.0",
+  "difficultyLabel": "Ages 7–9 • Grades 2–4",
+  "accentHex": "#6366F1",
+  "ageGroup": "AGES_7_9",
+  "iqTarget": "WARMUP_100",
+  "subject": "MATHS"
+}

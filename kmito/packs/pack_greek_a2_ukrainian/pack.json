@@ -1,0 +1,16 @@
+{
+  "id": "pack_greek_a2_ukrainian",
+  "title": "Ελληνικά A2 (Українською)",
+  "subtitle": "100 завдань рівня A2: живі фрази для кафе, крамниці, вулиці й лікаря; теперішній, минулий і майбутній час, να замість інфінітива, артиклі, рід і відмінки з поясненнями українською",
+  "category": "VOCABULARY",
+  "author": "Kmito Language Lab",
+  "version": "1.0.0",
+  "difficultyLabel": "CEFR A2 • Фрази + Граматика",
+  "accentHex": "#06B6D4",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "WARMUP_100",
+  "subject": "COURSE",
+  "teaches": "el",
+  "stage": 1,
+  "baseLanguage": "ua"
+}

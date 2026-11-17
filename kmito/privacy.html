@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Privacy Policy — Kmito by Kelly Ideas</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..900&family=JetBrains+Mono:wght@400;700&display=swap">
+<script>
+  /* Dark by default; a choice saved on any Kmito page wins. */
+  var t = 'dark'; try { var saved = localStorage.getItem('kmito-theme'); if (saved === 'dark' || saved === 'light') t = saved; } catch (e) {}
+  document.documentElement.setAttribute('data-theme', t);
+</script>
+<style>
+/* Tokens: the same custom properties as landing.html (docs/design-system/tokens.json). */
+:root {
+  --space-2: 2px; --space-4: 4px; --space-6: 6px; --space-8: 8px; --space-12: 12px; --space-16: 16px; --space-20: 20px; --space-24: 24px; --space-32: 32px; --space-40: 40px;
+  --radius-md: 12px; --radius-2xl: 24px; --radius-full: 999px;
+  --font-family-sans: "Google Sans Flex", "Google Sans", "Product Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-weight-regular: 400; --font-weight-medium: 500; --font-weight-bold: 700;
+  --type-display-medium-size: 45px; --type-display-medium-line-height: 52px;
+  --type-display-small-size: 36px; --type-display-small-line-height: 44px;
+  --type-headline-small-size: 24px; --type-headline-small-line-height: 32px;
+  --type-title-large-size: 22px; --type-title-large-line-height: 28px;
+  --type-body-large-size: 16px; --type-body-large-line-height: 20px; --type-body-large-tracking: 0.5px;
+  --type-body-medium-size: 14px; --type-body-medium-line-height: 18px; --type-body-medium-tracking: 0.25px;
+  --type-body-small-size: 12px; --type-body-small-line-height: 16px; --type-body-small-tracking: 0.4px;
+  --type-app-screen-title-tracking: -0.5px;
+  --type-app-overline-size: 11px; --type-app-overline-line-height: 16px; --type-app-overline-tracking: 1px;
+  --type-mono-label-large-size: 14px; --type-mono-label-large-line-height: 20px;
+  --tint-38: 38%; --tint-65: 65%;
+  --size-target: 48px; --size-header-control: 40px; --size-hairline: 1px; --size-leader-dot: 1.5px; --size-leader-pitch: 4px;
+  --effect-blur-glass: 24px;
+  --motion-page: 280ms; --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  /* page-only values (as in landing.html) */
+  --page-header-h: 64px;
+  --page-gutter: clamp(var(--space-16), 4vw, var(--space-40));
+  --page-doc: 45rem;            /* reading column, about 72 characters */
+  --page-body-line: 1.6;        /* long-form reading; the app's 20/16 is for short lines */
+  --page-glow-size: clamp(560px, 80vmax, 1240px);
+}
+:root, :root[data-theme="light"] {
+  --color-primary: #2C6300; --color-on-primary: #FFFFFF;
+  --color-background: #F7F5EE; --color-on-background: #141412;
+  --color-surface: #FFFFFF; --color-on-surface: #141412;
+  --color-surface-variant: #ECE8DD; --color-on-surface-variant: #6B685E; --color-outline: #DBD6C9;
+  --gradient-glow-primary-center: #D2FF2847; --gradient-glow-primary-mid: #D2FF2812; --gradient-glow-primary-edge: #D2FF2800;
+}
+:root[data-theme="dark"] {
+  --color-primary: #D2FF28; --color-on-primary: #0E0E0C;
+  --color-background: #0E0E0C; --color-on-background: #F6F4EE;
+  --color-surface: #171714; --color-on-surface: #F6F4EE;
+  --color-surface-variant: #22221D; --color-on-surface-variant: #8E8C84; --color-outline: #2F2E28;
+  --gradient-glow-primary-center: #D2FF2838; --gradient-glow-primary-mid: #D2FF2812; --gradient-glow-primary-edge: #D2FF2800;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--color-background); color: var(--color-on-background);
+  font-family: var(--font-family-sans); font-size: var(--type-body-large-size); line-height: var(--type-body-large-line-height); letter-spacing: var(--type-body-large-tracking);
+  overflow-x: clip; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: var(--size-hairline) solid var(--color-on-surface); outline-offset: var(--space-2); }
+.wrap { width: 100%; max-width: var(--page-doc); margin-inline: auto; padding-inline: var(--page-gutter); }
+
+/* Glow: the landing page's big part, still */
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.glow::before { content: ""; position: absolute; width: var(--page-glow-size); height: var(--page-glow-size); right: calc(var(--page-glow-size) / -3); top: calc(var(--page-glow-size) / -2.4); border-radius: var(--radius-full); opacity: var(--tint-65);
+  background: radial-gradient(circle closest-side, var(--gradient-glow-primary-center), var(--gradient-glow-primary-mid) 55%, var(--gradient-glow-primary-edge)); }
+
+/* Header */
+.site-header { position: sticky; top: 0; z-index: 10; height: var(--page-header-h); border-bottom: var(--size-hairline) solid var(--color-outline);
+  background: color-mix(in srgb, var(--color-background) 88%, transparent); -webkit-backdrop-filter: blur(var(--effect-blur-glass)); backdrop-filter: blur(var(--effect-blur-glass)); }
+.site-header .bar { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
+.brand { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--size-target); text-decoration: none; font-weight: 900; font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); }
+.brand svg { width: 28px; height: 28px; color: var(--color-on-surface); }
+.icon-btn { position: relative; display: inline-grid; place-items: center; width: var(--size-header-control); height: var(--size-header-control); border-radius: var(--radius-full); border: var(--size-hairline) solid var(--color-outline); background: transparent; color: var(--color-on-surface); cursor: pointer; overflow: hidden; }
+.icon-btn svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform var(--motion-page) var(--ease-standard), opacity var(--motion-page) var(--ease-standard); }
+.icon-btn .icon-next { transform: translateY(150%); opacity: 0; }
+@media (hover: hover) { .icon-btn:hover .icon-now { transform: translateY(-150%); opacity: 0; } .icon-btn:hover .icon-next { transform: none; opacity: 1; } }
+.icon-btn:focus-visible .icon-now { transform: translateY(-150%); opacity: 0; } .icon-btn:focus-visible .icon-next { transform: none; opacity: 1; }
+
+/* Underline that travels (as on the landing page) */
+.link { position: relative; text-decoration: none; }
+.link::before, .link::after { content: ""; position: absolute; left: 0; right: 0; bottom: calc(var(--space-2) * -1); height: var(--size-hairline); background: currentColor; }
+.link::before { opacity: var(--tint-38); }
+.link::after { transform: scaleX(0); transform-origin: right center; transition: transform var(--motion-page) var(--ease-standard); }
+@media (hover: hover) { .link:hover::after { transform: scaleX(1); transform-origin: left center; } }
+.link:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+
+/* Document */
+main { padding-block: calc(var(--space-40) * 2) calc(var(--space-40) * 2.5); }
+.overline { margin: 0 0 var(--space-12); font-weight: var(--font-weight-bold); font-size: var(--type-app-overline-size); line-height: var(--type-app-overline-line-height); letter-spacing: var(--type-app-overline-tracking); text-transform: uppercase; color: var(--color-on-surface-variant); }
+h1 { margin: 0; font-weight: 900; font-size: var(--type-display-small-size); line-height: var(--type-display-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); text-wrap: balance; }
+@media (min-width: 900px) { h1 { font-size: var(--type-display-medium-size); line-height: var(--type-display-medium-line-height); } }
+.facts { margin: var(--space-32) 0 var(--space-40); border-top: var(--size-hairline) solid var(--color-outline); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); }
+.facts > div { display: flex; align-items: center; gap: var(--space-6); min-height: var(--size-target); border-bottom: var(--size-hairline) solid var(--color-outline); }
+.facts dt { color: var(--color-on-surface-variant); }
+.facts .leader { flex: 1; min-width: var(--space-16); height: var(--size-leader-dot); opacity: var(--tint-65); background: radial-gradient(circle, var(--color-on-surface-variant) calc(var(--size-leader-dot) / 2), transparent calc(var(--size-leader-dot) / 2 + 0.5px)) 0 50% / var(--size-leader-pitch) var(--size-leader-dot) repeat-x; }
+.facts dd { margin: 0; font-weight: var(--font-weight-bold); text-align: end; }
+.doc p, .doc li { color: var(--color-on-surface-variant); line-height: var(--page-body-line); margin: 0 0 var(--space-16); }
+.doc strong { color: var(--color-on-background); font-weight: var(--font-weight-bold); }
+.doc em { font-style: normal; color: var(--color-on-background); }
+.doc h2 { margin: var(--space-40) 0 var(--space-12); font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: 0; }
+.doc ul { margin: 0; padding: 0; list-style: none; }
+.doc li { position: relative; padding-left: var(--space-20); }
+.doc li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: var(--space-6); height: var(--space-6); border-radius: var(--radius-full); background: var(--color-on-surface-variant); }
+.doc code, .facts code { font-family: var(--font-family-mono); font-size: inherit; }
+.doc a { color: var(--color-on-background); }
+
+/* Footer */
+.site-footer { border-top: var(--size-hairline) solid var(--color-outline); padding-block: var(--space-40); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+.site-footer .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-16) var(--space-24); max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
+.site-footer nav { display: flex; gap: var(--space-24); color: var(--color-on-surface); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; } }
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-logo" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M299.05,59.15A200,200 0 0,1 445.07,180.04A73.25,73.25 0 0,0 397.92,187.81A153.75,153.75 0 0,0 290.22,104.55A40.5,40.5 0 0,0 299.05,59.15Z M447.57,323.99A200,200 0 0,1 296.86,451.78A40.5,40.5 0 0,0 288.55,406.28A153.75,153.75 0 0,0 400.18,317.86A73.25,73.25 0 0,0 447.57,323.99Z M223.18,451.88A200,200 0 0,1 72.39,325.22A73.25,73.25 0 0,0 117.77,314.24A153.75,153.75 0 0,0 231.37,406.36A40.5,40.5 0 0,0 223.18,451.88Z M74.81,179.11A200,200 0 0,1 225.37,58.23A40.5,40.5 0 0,0 233.06,103.83A153.75,153.75 0 0,0 119.8,191.58A73.25,73.25 0 0,0 74.81,179.11Z M38.25,252.25A40.5,40.5 0 1,1 119.25,252.25A40.5,40.5 0 1,1 38.25,252.25Z M392.25,252.25A40.5,40.5 0 1,1 473.25,252.25A40.5,40.5 0 1,1 392.25,252.25Z M173.25,255.25A86.5,86.5 0 1,1 346.25,255.25A86.5,86.5 0 1,1 173.25,255.25Z M219,255.25A40.75,40.75 0 1,0 300.5,255.25A40.75,40.75 0 1,0 219,255.25Z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="bar">
+    <!-- Absolute, because this page is served both as /kmito/privacy.html and /kmito/privacy/ -->
+    <a class="brand" href="https://kelly-ideas.github.io/kmito/" aria-label="Kmito home">
+      <svg aria-hidden="true"><use href="#i-logo"/></svg><span>Kmito</span>
+    </a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to light theme">
+      <svg class="icon-now" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="icon-next" aria-hidden="true"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="overline">Kelly Ideas</p>
+  <h1>Privacy Policy for Kmito</h1>
+  <dl class="facts">
+    <div><dt>Effective Date</dt><span class="leader" aria-hidden="true"></span><dd>October 24, 2026</dd></div>
+    <div><dt>Last Updated</dt><span class="leader" aria-hidden="true"></span><dd>November 17, 2026</dd></div>
+    <div><dt>Developer</dt><span class="leader" aria-hidden="true"></span><dd>Kelly Ideas</dd></div>
+    <div><dt>Package ID</dt><span class="leader" aria-hidden="true"></span><dd><code>io.github.kellyideas.kmito</code></dd></div>
+  </dl>
+
+  <div class="doc">
+    <p>
+      <strong>Kmito</strong> is a cognitive quiz and screen-time budget application developed by <strong>Kelly Ideas</strong>. It works fully offline.
+    </p>
+
+    <h2>1. Data Collection and Sharing</h2>
+    <p>
+      Kmito does <strong>not</strong> collect or share personal data. The only data that can leave your phone is anonymous usage data, and only if you turn it on (see <em>Anonymous usage data</em> below). Kmito never sells data and shows no ads.
+    </p>
+    <ul>
+      <li><strong>Internet Access:</strong> Kmito uses the internet only to send anonymous usage data after you opt in. The Google Play release downloads no content from the internet itself.</li>
+      <li><strong>Updates (Google Play release):</strong> When you press <em>Check</em> in Settings → About, and at most once a day when the app opens, Kmito asks the Google Play Store app on your phone whether a newer version exists. Google Play downloads and installs the update, as it does for any app from the store, under Google's own terms. Kmito sends nothing to Kelly Ideas for this.</li>
+      <li><strong>100% On-Device Storage:</strong> All quiz answers, earned screen-time minute balances, daily streaks, and application settings (such as theme and language preferences) are stored strictly locally in your device's internal application database.</li>
+      <li><strong>Microphone (Optional, for Voice Answers):</strong> Kmito asks for microphone access only if you want to answer quizzes by voice. You can decline and answer by tapping instead. When you use voice answers, Kmito passes your speech to Android's speech recognition, gets back text, and compares that text with the answer choices. Kmito does not record, save or upload audio, and it keeps no transcripts. On Android 12 and later, when your phone has on-device speech recognition, Kmito uses it and the audio stays on your phone. Otherwise Android uses your phone's default speech recognition service (often Google's), which may process the audio on its own servers under that provider's privacy policy. Kelly Ideas receives none of this audio or text.</li>
+      <li><strong>Not Included in Backups:</strong> The app database is excluded from Android cloud backup and from device-to-device transfer, so it is not copied to your Google account or to a new phone.</li>
+      <li><strong>Anonymous Usage Data (Optional, Off by Default):</strong> In Settings → Permissions you can turn on <em>Share anonymous usage data</em>. Only then does Kmito send app events to Google Analytics for Firebase, a service run by Google for Kelly Ideas. The events say which screens and steps were used, for example which permission was allowed or declined, whether setup was finished, and whether the quiz lock is on. They never contain your name, email, quiz answers, the names of your apps, or what you do in other apps. Firebase also receives technical data that comes with every event: a random app-install ID made by Firebase, device model, Android version, app version, language, and an approximate location (country or region) derived from the network address. Kmito does not use the advertising ID or the Android ID, sets no user ID, and turns off ad personalization. Data is sent encrypted (HTTPS) and Google Analytics keeps it for 2 months. Turn the switch off at any time: sending stops at once and the app-install ID is deleted from your phone. While Child Guard is on, nothing is sent. See <a class="link" href="https://policies.google.com/privacy">policies.google.com/privacy</a> and <a class="link" href="https://firebase.google.com/support/privacy">firebase.google.com/support/privacy</a>.</li>
+      <li><strong>No Advertising:</strong> Kmito contains no advertising SDKs and no crash-reporting SDKs. The only third-party service that receives data from Kmito is the optional Google Analytics for Firebase above; the update check uses the Google Play Store app already on your phone.</li>
+    </ul>
+
+    <h2>2. Data Retention and Deletion</h2>
+    <p>
+      Your quiz data and settings live only on your device, so you have full control over them. You can reset your data inside the app's Settings screen, clear the application storage in your Android system settings, or uninstall the app to permanently remove all locally stored records. Anonymous usage data already sent holds no name or email, so it cannot be traced back to you; Google Analytics deletes it automatically after 2 months.
+    </p>
+
+    <h2>3. Contact Us</h2>
+    <p>
+      If you have any questions about this Privacy Policy, please contact <strong>Kelly Ideas</strong> at
+      <a class="link" href="mailto:kellyideas.team@gmail.com">kellyideas.team@gmail.com</a>.
+    </p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="bar">
+    <span>Kmito by Kelly Ideas</span>
+    <nav aria-label="Footer">
+      <a class="link" href="https://kelly-ideas.github.io/kmito/">Kmito</a>
+      <a class="link" href="mailto:kellyideas.team@gmail.com">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const btn = document.querySelector('[data-theme-toggle]');
+  const paint = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const use = btn.querySelectorAll('use');
+    use[0].setAttribute('href', dark ? '#i-moon' : '#i-sun');
+    use[1].setAttribute('href', dark ? '#i-sun' : '#i-moon');
+    btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  };
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kmito-theme', next); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

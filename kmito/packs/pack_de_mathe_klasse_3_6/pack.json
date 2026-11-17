@@ -1,0 +1,14 @@
+{
+  "id": "pack_de_mathe_klasse_3_6",
+  "title": "Mathe Klasse 3–6 (Deutsch)",
+  "subtitle": "Einmaleins, schriftliches Rechnen, Größen, Brüche, Prozent und Sachaufgaben, mit dem Ziffernblock",
+  "category": "MATH",
+  "author": "Kmito Lernwerkstatt",
+  "version": "1.1.0",
+  "difficultyLabel": "Klasse 3 bis 6",
+  "accentHex": "#F59E0B",
+  "ageGroup": "AGES_10_13",
+  "iqTarget": "WARMUP_100",
+  "subject": "MATHS",
+  "baseLanguage": "de"
+}
