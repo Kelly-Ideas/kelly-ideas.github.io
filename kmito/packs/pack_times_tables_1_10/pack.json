@@ -1,0 +1,13 @@
+{
+  "id": "pack_times_tables_1_10",
+  "title": "Times Tables 1–10",
+  "subtitle": "Every fact from 1 × 1 to 10 × 10, typed on the numpad, with a trick for each",
+  "category": "MATH",
+  "author": "Kmito Junior Academy",
+  "version": "1.0.0",
+  "difficultyLabel": "Ages 7–9 • Times tables",
+  "accentHex": "#22C55E",
+  "ageGroup": "AGES_7_9",
+  "iqTarget": "WARMUP_100",
+  "subject": "MATHS"
+}

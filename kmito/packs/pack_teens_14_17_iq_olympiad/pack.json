@@ -1,0 +1,13 @@
+{
+  "id": "pack_teens_14_17_iq_olympiad",
+  "title": "Teens & High School (14–17 yrs): Exam & IQ Booster",
+  "subtitle": "Pythagorean geometry, syllogisms, Newton's laws, binary math & logarithms",
+  "category": "MATH",
+  "author": "Kmito Olympiad Prep",
+  "version": "2.0.0",
+  "difficultyLabel": "Ages 14–17 • High School",
+  "accentHex": "#8B5CF6",
+  "ageGroup": "AGES_14_17",
+  "iqTarget": "SHARP_120",
+  "subject": "MIX"
+}

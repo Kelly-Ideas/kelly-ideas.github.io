@@ -1,0 +1,13 @@
+{
+  "id": "pack_gm_chess_endgames",
+  "title": "Grandmaster Chess Endgames & Tactics",
+  "subtitle": "Interactive 2D FEN mating nets, forks, pins & sacrifices",
+  "category": "CHESS",
+  "author": "Kmito Chess Lab",
+  "version": "2.1.0",
+  "difficultyLabel": "Medium – Master",
+  "accentHex": "#8B5CF6",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "GENIUS_140",
+  "subject": "CHESS"
+}

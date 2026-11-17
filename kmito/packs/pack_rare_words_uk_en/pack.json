@@ -1,0 +1,19 @@
+{
+  "id": "pack_rare_words_uk_en",
+  "title": "Rare Words",
+  "subtitle": "One rare word per card, explained in Ukrainian and in English",
+  "category": "VOCABULARY",
+  "author": "Kmito",
+  "version": "1.0.0",
+  "difficultyLabel": "Teens and adults • Українська + English",
+  "accentHex": "#8B5CF6",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "SHARP_120",
+  "subject": "READING",
+  "baseLanguage": "ua",
+  "tasteIds": [
+    5115,
+    5018,
+    5015
+  ]
+}

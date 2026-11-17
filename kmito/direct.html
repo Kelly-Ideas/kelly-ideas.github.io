@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Kmito — Kelly Ideas OTA &amp; Public Portal</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..900&family=JetBrains+Mono:wght@400;700&display=swap">
+<script>
+  /* Dark by default; a choice saved on any Kmito page wins. */
+  var t = 'dark'; try { var saved = localStorage.getItem('kmito-theme'); if (saved === 'dark' || saved === 'light') t = saved; } catch (e) {}
+  document.documentElement.setAttribute('data-theme', t);
+</script>
+<style>
+/* Tokens: the same custom properties as landing.html (docs/design-system/tokens.json). */
+:root {
+  --space-2: 2px; --space-4: 4px; --space-6: 6px; --space-8: 8px; --space-12: 12px; --space-16: 16px; --space-20: 20px; --space-24: 24px; --space-32: 32px; --space-40: 40px;
+  --radius-md: 12px; --radius-2xl: 24px; --radius-full: 999px;
+  --font-family-sans: "Google Sans Flex", "Google Sans", "Product Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-weight-regular: 400; --font-weight-medium: 500; --font-weight-bold: 700;
+  --type-display-medium-size: 45px; --type-display-medium-line-height: 52px;
+  --type-display-small-size: 36px; --type-display-small-line-height: 44px;
+  --type-headline-small-size: 24px; --type-headline-small-line-height: 32px;
+  --type-title-large-size: 22px; --type-title-large-line-height: 28px;
+  --type-body-large-size: 16px; --type-body-large-line-height: 20px; --type-body-large-tracking: 0.5px;
+  --type-body-medium-size: 14px; --type-body-medium-line-height: 18px; --type-body-medium-tracking: 0.25px;
+  --type-body-small-size: 12px; --type-body-small-line-height: 16px; --type-body-small-tracking: 0.4px;
+  --type-app-screen-title-tracking: -0.5px;
+  --type-app-overline-size: 11px; --type-app-overline-line-height: 16px; --type-app-overline-tracking: 1px;
+  --type-mono-label-large-size: 14px; --type-mono-label-large-line-height: 20px;
+  --tint-38: 38%; --tint-65: 65%;
+  --size-target: 48px; --size-header-control: 40px; --size-hairline: 1px; --size-leader-dot: 1.5px; --size-leader-pitch: 4px;
+  --effect-blur-glass: 24px;
+  --motion-page: 280ms; --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  /* page-only values (as in landing.html) */
+  --page-header-h: 64px;
+  --page-gutter: clamp(var(--space-16), 4vw, var(--space-40));
+  --page-doc: 45rem;            /* reading column, about 72 characters */
+  --page-body-line: 1.6;        /* long-form reading; the app's 20/16 is for short lines */
+  --page-glow-size: clamp(560px, 80vmax, 1240px);
+}
+:root, :root[data-theme="light"] {
+  --color-primary: #2C6300; --color-on-primary: #FFFFFF;
+  --color-background: #F7F5EE; --color-on-background: #141412;
+  --color-surface: #FFFFFF; --color-on-surface: #141412;
+  --color-surface-variant: #ECE8DD; --color-on-surface-variant: #6B685E; --color-outline: #DBD6C9;
+  --gradient-glow-primary-center: #D2FF2847; --gradient-glow-primary-mid: #D2FF2812; --gradient-glow-primary-edge: #D2FF2800;
+}
+:root[data-theme="dark"] {
+  --color-primary: #D2FF28; --color-on-primary: #0E0E0C;
+  --color-background: #0E0E0C; --color-on-background: #F6F4EE;
+  --color-surface: #171714; --color-on-surface: #F6F4EE;
+  --color-surface-variant: #22221D; --color-on-surface-variant: #8E8C84; --color-outline: #2F2E28;
+  --gradient-glow-primary-center: #D2FF2838; --gradient-glow-primary-mid: #D2FF2812; --gradient-glow-primary-edge: #D2FF2800;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--color-background); color: var(--color-on-background);
+  font-family: var(--font-family-sans); font-size: var(--type-body-large-size); line-height: var(--type-body-large-line-height); letter-spacing: var(--type-body-large-tracking);
+  overflow-x: clip; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: var(--size-hairline) solid var(--color-on-surface); outline-offset: var(--space-2); }
+.wrap { width: 100%; max-width: var(--page-doc); margin-inline: auto; padding-inline: var(--page-gutter); }
+
+/* Glow: the landing page's big part, still */
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.glow::before { content: ""; position: absolute; width: var(--page-glow-size); height: var(--page-glow-size); right: calc(var(--page-glow-size) / -3); top: calc(var(--page-glow-size) / -2.4); border-radius: var(--radius-full); opacity: var(--tint-65);
+  background: radial-gradient(circle closest-side, var(--gradient-glow-primary-center), var(--gradient-glow-primary-mid) 55%, var(--gradient-glow-primary-edge)); }
+
+/* Header */
+.site-header { position: sticky; top: 0; z-index: 10; height: var(--page-header-h); border-bottom: var(--size-hairline) solid var(--color-outline);
+  background: color-mix(in srgb, var(--color-background) 88%, transparent); -webkit-backdrop-filter: blur(var(--effect-blur-glass)); backdrop-filter: blur(var(--effect-blur-glass)); }
+.site-header .bar { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
+.brand { display: inline-flex; align-items: center; gap: var(--space-4); min-height: var(--size-target); text-decoration: none; font-weight: 900; font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); }
+.brand svg { width: 28px; height: 28px; color: var(--color-on-surface); }
+.icon-btn { position: relative; display: inline-grid; place-items: center; width: var(--size-header-control); height: var(--size-header-control); border-radius: var(--radius-full); border: var(--size-hairline) solid var(--color-outline); background: transparent; color: var(--color-on-surface); cursor: pointer; overflow: hidden; }
+.icon-btn svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform var(--motion-page) var(--ease-standard), opacity var(--motion-page) var(--ease-standard); }
+.icon-btn .icon-next { transform: translateY(150%); opacity: 0; }
+@media (hover: hover) { .icon-btn:hover .icon-now { transform: translateY(-150%); opacity: 0; } .icon-btn:hover .icon-next { transform: none; opacity: 1; } }
+.icon-btn:focus-visible .icon-now { transform: translateY(-150%); opacity: 0; } .icon-btn:focus-visible .icon-next { transform: none; opacity: 1; }
+
+/* Underline that travels (as on the landing page) */
+.link { position: relative; text-decoration: none; }
+.link::before, .link::after { content: ""; position: absolute; left: 0; right: 0; bottom: calc(var(--space-2) * -1); height: var(--size-hairline); background: currentColor; }
+.link::before { opacity: var(--tint-38); }
+.link::after { transform: scaleX(0); transform-origin: right center; transition: transform var(--motion-page) var(--ease-standard); }
+@media (hover: hover) { .link:hover::after { transform: scaleX(1); transform-origin: left center; } }
+.link:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+
+/* Document */
+main { padding-block: calc(var(--space-40) * 2) calc(var(--space-40) * 2.5); }
+.overline { margin: 0 0 var(--space-12); font-weight: var(--font-weight-bold); font-size: var(--type-app-overline-size); line-height: var(--type-app-overline-line-height); letter-spacing: var(--type-app-overline-tracking); text-transform: uppercase; color: var(--color-on-surface-variant); }
+h1 { margin: 0; font-weight: 900; font-size: var(--type-display-small-size); line-height: var(--type-display-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); text-wrap: balance; }
+@media (min-width: 900px) { h1 { font-size: var(--type-display-medium-size); line-height: var(--type-display-medium-line-height); } }
+.facts { margin: var(--space-32) 0 var(--space-40); border-top: var(--size-hairline) solid var(--color-outline); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); }
+.facts > div { display: flex; align-items: center; gap: var(--space-6); min-height: var(--size-target); border-bottom: var(--size-hairline) solid var(--color-outline); }
+.facts dt { color: var(--color-on-surface-variant); }
+.facts .leader { flex: 1; min-width: var(--space-16); height: var(--size-leader-dot); opacity: var(--tint-65); background: radial-gradient(circle, var(--color-on-surface-variant) calc(var(--size-leader-dot) / 2), transparent calc(var(--size-leader-dot) / 2 + 0.5px)) 0 50% / var(--size-leader-pitch) var(--size-leader-dot) repeat-x; }
+.facts dd { margin: 0; font-weight: var(--font-weight-bold); text-align: end; }
+.doc p, .doc li { color: var(--color-on-surface-variant); line-height: var(--page-body-line); margin: 0 0 var(--space-16); }
+.doc strong { color: var(--color-on-background); font-weight: var(--font-weight-bold); }
+.doc em { font-style: normal; color: var(--color-on-background); }
+.doc h2 { margin: var(--space-40) 0 var(--space-12); font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: 0; }
+.doc ul { margin: 0; padding: 0; list-style: none; }
+.doc li { position: relative; padding-left: var(--space-20); }
+.doc li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: var(--space-6); height: var(--space-6); border-radius: var(--radius-full); background: var(--color-on-surface-variant); }
+.doc code, .facts code { font-family: var(--font-family-mono); font-size: inherit; }
+.doc a { color: var(--color-on-background); }
+
+/* Footer */
+.site-footer { border-top: var(--size-hairline) solid var(--color-outline); padding-block: var(--space-40); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+.site-footer .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-16) var(--space-24); max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
+.site-footer nav { display: flex; gap: var(--space-24); color: var(--color-on-surface); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; } }
+</style>
+<style>
+/* Portal page */
+main.portal { padding-block: calc(var(--space-40) * 2) calc(var(--space-40) * 2.5); max-width: 36rem; }
+.portal .lead { margin: var(--space-16) 0 var(--space-32); color: var(--color-on-surface-variant); font-size: var(--type-title-large-size); line-height: var(--type-title-large-line-height); letter-spacing: 0; }
+.btn { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 52px; padding-inline: var(--space-32); border-radius: var(--radius-full);
+  background: var(--color-primary); color: var(--color-on-primary); text-decoration: none; overflow: hidden; isolation: isolate;
+  font-weight: 600; font-size: var(--type-body-large-size); line-height: 24px; letter-spacing: 0.1px; }
+.btn__slide { display: block; height: 24px; overflow: hidden; line-height: inherit; }
+.btn__line { display: block; height: 100%; line-height: inherit; transition: transform var(--motion-page) var(--ease-standard); }
+.btn__line + .btn__line { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); }
+@media (hover: hover) { .btn:hover .btn__line { transform: translateY(-100%); } }
+.btn:focus-visible .btn__line { transform: translateY(-100%); }
+.btn:active { transform: scale(0.95); }
+.meta-box { margin: var(--space-16) 0 var(--space-32); padding: var(--space-12) var(--space-16); border: var(--size-hairline) solid var(--color-outline); border-radius: var(--radius-md);
+  background: var(--color-surface); color: var(--color-on-surface-variant); font-family: var(--font-family-mono); font-size: var(--type-body-medium-size); line-height: 20px; overflow-wrap: anywhere; }
+.links { display: flex; flex-wrap: wrap; gap: var(--space-12) var(--space-24); font-weight: var(--font-weight-medium); font-size: var(--type-body-medium-size); }
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-logo" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M291.24,59.13A200,200 0 0,1 442.34,183.34A73.27,73.27 0 0,0 396.1,192.63A153.77,153.77 0 0,0 286.86,105.36A40.51,40.51 0 0,0 291.24,59.13Z M442.34,328.66A200,200 0 0,1 291.24,452.87A40.51,40.51 0 0,0 286.86,406.64A153.77,153.77 0 0,0 396.1,319.37A73.27,73.27 0 0,0 442.34,328.66Z M220.76,452.87A200,200 0 0,1 69.66,328.66A73.27,73.27 0 0,0 115.9,319.37A153.77,153.77 0 0,0 225.14,406.64A40.51,40.51 0 0,0 220.76,452.87Z M69.66,183.34A200,200 0 0,1 220.76,59.13A40.51,40.51 0 0,0 225.14,105.36A153.77,153.77 0 0,0 115.9,192.63A73.27,73.27 0 0,0 69.66,183.34Z M38.61,256A40.51,40.51 0 1,1 119.63,256A40.51,40.51 0 1,1 38.61,256Z M392.37,256A40.51,40.51 0 1,1 473.39,256A40.51,40.51 0 1,1 392.37,256Z M169.48,256A86.52,86.52 0 1,1 342.52,256A86.52,86.52 0 1,1 169.48,256Z M215.26,256A40.74,40.74 0 1,0 296.74,256A40.74,40.74 0 1,0 215.26,256Z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="./" aria-label="Kmito home">
+      <svg aria-hidden="true"><use href="#i-logo"/></svg><span>Kmito</span>
+    </a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to light theme">
+      <svg class="icon-now" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="icon-next" aria-hidden="true"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap portal">
+  <p class="overline">Kelly Ideas</p>
+  <h1>Kmito</h1>
+  <p class="lead">Solve logic, math, physics, chess, and coding challenges to earn mindful screen time.</p>
+
+  <a class="btn" href="./ota/Kmito-latest.apk" download>
+    <span class="btn__slide"><span class="btn__line">Download Latest Sideload APK</span><span class="btn__line" aria-hidden="true">Kmito-latest.apk</span></span>
+  </a>
+
+  <div class="meta-box" id="version-info">
+    Channel: Unrestricted Sideload OTA · Latest Build: v1.0.107
+  </div>
+
+  <div class="links">
+    <a class="link" href="./privacy">Privacy Policy</a>
+    <a class="link" href="./ota/latest.json">OTA Metadata</a>
+    <a class="link" href="./packs.json">Packs Catalog</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="bar">
+    <span>Kmito by Kelly Ideas</span>
+    <nav aria-label="Footer">
+      <a class="link" href="./">Kmito</a>
+      <a class="link" href="mailto:kellyideas.team@gmail.com">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const btn = document.querySelector('[data-theme-toggle]');
+  const paint = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const use = btn.querySelectorAll('use');
+    use[0].setAttribute('href', dark ? '#i-moon' : '#i-sun');
+    use[1].setAttribute('href', dark ? '#i-sun' : '#i-moon');
+    btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  };
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kmito-theme', next); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>
+<script>
+  fetch('./ota/latest.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.tag_name) {
+        document.getElementById('version-info').textContent =
+          'Channel: Unrestricted Sideload OTA · Latest Build: ' + data.tag_name + ' (code ' + data.version_code + ')';
+      }
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>

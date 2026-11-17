@@ -1,0 +1,13 @@
+{
+  "id": "pack_quick_games",
+  "title": "Quick Games",
+  "subtitle": "Laser mirrors and lines of three: think for 20 seconds, then go",
+  "category": "LOGIC",
+  "author": "Kmito Game Lab",
+  "version": "1.1.0",
+  "difficultyLabel": "Easy – Hard • 20s Games",
+  "accentHex": "#D2FF28",
+  "ageGroup": "ADULTS_PRO",
+  "iqTarget": "SHARP_120",
+  "subject": "GAMES"
+}
