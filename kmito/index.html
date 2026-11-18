@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
+<link rel="alternate" hreflang="en" href="https://kelly-ideas.github.io/kmito/">
+<link rel="alternate" hreflang="uk" href="https://kelly-ideas.github.io/kmito/uk/">
 <title>Kmito: One question first</title>
 <!-- Google Analytics (stream "Kmito Site", property kmito-82201). Cookieless: Consent Mode with all storage denied
      writes no cookie or local storage; Google gets cookieless pings only, so no banner is needed.
@@ -20,11 +22,22 @@
 <meta name="description" content="Kmito asks one question before the feed opens. A right answer makes 10 minutes of screen time. No account, no ads.">
 <meta property="og:title" content="Kmito: One question first.">
 <meta property="og:description" content="A right answer makes 10 minutes of screen time. A fair deal with your phone.">
+<!-- Link preview (share image made in Figma: Landing page, "Share image / EN", 1200x630) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kmito">
+<meta property="og:url" content="https://kelly-ideas.github.io/kmito/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://kelly-ideas.github.io/kmito/landing-assets/share-en.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kmito: One question first. A right answer makes 10 min of screen time. A phone shows the Home screen.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kelly-ideas.github.io/kmito/landing-assets/share-en.jpg">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..900&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..900&family=Onest:wght@400..900&family=JetBrains+Mono:wght@400;700&display=swap">
 <script>
   /* Theme before first paint: Dark by default; a saved choice wins. */
   var t = 'dark'; try { var saved = localStorage.getItem('kmito-theme'); if (saved === 'dark' || saved === 'light') t = saved; } catch (e) {}
@@ -66,7 +79,9 @@
   --radius-full: 999px;
 
   /* font/family/*, font/weight/* (foundations §2.1), with real fallbacks */
-  --font-family-sans: "Google Sans Flex", "Google Sans", "Product Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Google Sans Flex has no Cyrillic on Google Fonts: Onest (open, Ukrainian-made) draws only the
+     letters Flex lacks; the browser fetches its Cyrillic files only when a page shows Cyrillic. */
+  --font-family-sans: "Google Sans Flex", "Onest", "Google Sans", "Product Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -170,7 +185,9 @@
   --page-header-h: calc(var(--page-island-h) + var(--page-island-top) * 2);
   --page-ease-spring: cubic-bezier(0.34, 1.32, 0.64, 1);  /* small overshoot, island moves only */
   --page-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --page-island-shadow: 0 1px 0 color-mix(in srgb, var(--color-on-surface) 6%, transparent) inset, 0 12px 32px -12px color-mix(in srgb, #000 45%, transparent), 0 2px 6px -2px color-mix(in srgb, #000 20%, transparent);
+  --page-theme-wipe: 700ms;                              /* theme wipe, as the CloudPBX portal (UI-141) */
+  --page-ease-wipe: cubic-bezier(0.16, 1, 0.3, 1);       /* fast at first, slow near the top */
+  --page-island-shadow: 0 12px 32px -12px color-mix(in srgb, #000 45%, transparent);  /* Light: the soft drop only; the edge line and tight shadow read as a border */
   --page-gutter: clamp(var(--space-16), 4vw, var(--space-40));
   --page-section-pad: clamp(calc(var(--space-40) * 2), 12vw, calc(var(--space-40) * 4));
   /* Hero: 100 px at most (owner, Figma 198:19106); otherwise as large as the one-line
@@ -226,12 +243,17 @@
   /* page alias: the phone frame (graphite ink on paper) */
   --page-phone-frame: var(--color-on-background);
   --page-phone-bezel: var(--color-on-background);  /* black band between frame and screen */
+  --page-island-border: transparent;               /* Light: the island has no border, only its shadow */
   /* Every phone on the page has the proportions of the Screens strip (a 260 px phone: frame 6,
      bezel 6, radius 33.6). The phone's box is an inline-size container, so these follow its width. */
   --page-phone-frame-w: calc(100cqi * 6 / 260);
   --page-phone-bezel-w: calc(100cqi * 6 / 260);
   --page-phone-radius: calc(100cqi * 33.6 / 260);
 }
+
+/* Ukrainian page: Onest draws the Cyrillic, and the tight tracking tuned for Google Sans Flex
+   cramps it at title sizes, so titles loosen a little there. */
+:root:lang(uk) { --page-tracking-hero: -0.022em; --page-tracking-tight: -0.016em; --page-hero-fit: 6.7; }  /* "Спершу одне" is 6.26em wide */
 
 /* Colour roles, Dark mode: follows the system unless the visitor chose Light */
 @media (prefers-color-scheme: dark) {
@@ -260,6 +282,8 @@
     --slip-spark: #2C6300;
     --page-phone-frame: var(--color-outline);
     --page-phone-bezel: var(--color-background);
+    --page-island-border: color-mix(in srgb, var(--color-on-surface) 10%, transparent);
+    --page-island-shadow: 0 1px 0 color-mix(in srgb, var(--color-on-surface) 6%, transparent) inset, 0 12px 32px -12px color-mix(in srgb, #000 45%, transparent), 0 2px 6px -2px color-mix(in srgb, #000 20%, transparent);
   }
 }
 :root[data-theme="dark"] {
@@ -287,6 +311,8 @@
   --slip-spark: #2C6300;
   --page-phone-frame: var(--color-outline);
   --page-phone-bezel: var(--color-background);
+  --page-island-border: color-mix(in srgb, var(--color-on-surface) 10%, transparent);
+  --page-island-shadow: 0 1px 0 color-mix(in srgb, var(--color-on-surface) 6%, transparent) inset, 0 12px 32px -12px color-mix(in srgb, #000 45%, transparent), 0 2px 6px -2px color-mix(in srgb, #000 20%, transparent);
 }
 
 /* =====================================================================
@@ -534,7 +560,7 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
 .site-header.is-floating .island,
 .site-header.is-open .island {
   background-color: color-mix(in srgb, var(--color-surface) 76%, transparent);
-  border-color: color-mix(in srgb, var(--color-on-surface) 10%, transparent);
+  border-color: var(--page-island-border);
   box-shadow: var(--page-island-shadow);
   -webkit-backdrop-filter: blur(var(--effect-blur-glass)) saturate(1.5);
   backdrop-filter: blur(var(--effect-blur-glass)) saturate(1.5);
@@ -603,11 +629,14 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
 .header-get { display: none; min-height: var(--size-header-control); height: var(--size-header-control); padding-inline: var(--space-16); }
 .site-header .icon-btn { width: var(--size-header-control); height: var(--size-header-control); }
 .header-theme { display: none; }
+/* Language: the current one shows; hover or focus slides in the other, like the theme button */
+.lang-btn span { grid-area: 1 / 1; font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-size); line-height: 1; transition: transform var(--motion-page) var(--ease-standard), opacity var(--motion-page) var(--ease-standard); }
+.lang-btn .icon-next { transform: translateY(150%); opacity: 0; }
 
 /* Menu button: two lines that cross, inside a ring that is the page progress */
 .menu-btn { position: relative; display: inline-grid; place-items: center; width: var(--size-header-control); height: var(--size-header-control); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-on-surface); cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .menu-btn:active { transform: scale(0.92); }
-.menu-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 1.5; }
+.menu-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 1.5; opacity: 0.5; }  /* the progress stays quiet next to the lines */
 .menu-ring .track { stroke: var(--color-outline); }
 .menu-ring .fill { stroke: var(--color-on-surface); stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--page-p, 0)); transition: stroke-dashoffset var(--motion-content) linear; }
 .menu-lines { position: relative; width: var(--type-icon-16-size); height: var(--space-8); }
@@ -1083,6 +1112,24 @@ html.menu-open { overflow: hidden; }
 .cta .lead { margin: var(--space-24) auto 0; }
 .cta-actions { margin-top: var(--space-40); display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
 .cta .fine { margin-inline: auto; }
+.tester { margin: var(--space-40) auto 0; padding-top: var(--space-40); border-top: var(--size-hairline) solid var(--color-outline); max-width: 34rem; display: flex; flex-direction: column; align-items: center; gap: var(--space-16); }
+.tester-title { font-weight: var(--font-weight-bold); font-size: var(--type-title-medium-size); line-height: var(--type-title-medium-line-height); letter-spacing: var(--type-title-medium-tracking); }
+.tester-text { color: var(--color-on-surface-variant); text-wrap: pretty; }
+.tester .fine { overflow-wrap: anywhere; }
+.tester .btn--outline { border-color: var(--color-accent-volt); }
+
+/* Tester gate (closed testing): a small card over a dimmed page */
+.gate { width: min(100% - 2 * var(--page-gutter), 30rem); max-width: none; overflow: visible; padding: 0; border: 0; background: transparent; color: var(--color-on-surface); }
+.gate::backdrop { background: color-mix(in srgb, var(--color-background) 70%, transparent); -webkit-backdrop-filter: blur(var(--effect-blur-glass)); backdrop-filter: blur(var(--effect-blur-glass)); }
+.gate-card { position: relative; display: grid; gap: var(--space-16); padding: var(--space-32) var(--space-24) var(--space-24); border-radius: var(--radius-3xl); border: var(--size-hairline) solid var(--color-outline); background: var(--color-surface); box-shadow: var(--page-island-shadow); }
+.gate-close { position: absolute; top: var(--space-12); right: var(--space-12); }
+.gate-title { font-weight: var(--page-title-weight); font-size: var(--type-title-large-size); line-height: var(--type-title-large-line-height); padding-right: var(--space-40); text-wrap: balance; }
+.gate-text { color: var(--color-on-surface-variant); text-wrap: pretty; }
+.gate-actions { display: flex; flex-wrap: wrap; gap: var(--space-12); margin-top: var(--space-8); }
+.gate-actions .btn { flex: 1 1 12rem; }
+.gate-actions .btn--outline { border-color: var(--color-accent-volt); }
+.motion .gate[open] .gate-card { animation: gate-in var(--motion-page) var(--page-ease-out); }
+@keyframes gate-in { from { opacity: 0; transform: translateY(var(--space-16)) scale(0.98); } }
 .site-footer { padding-block: var(--space-40); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
 .site-footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-16) var(--space-24); }
 .footer-links { display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-24); color: var(--color-on-surface); }
@@ -1098,6 +1145,20 @@ html.menu-open { overflow: hidden; }
 .motion .hero-copy h1 span { animation: rise var(--motion-slip) var(--ease-standard) both; }
 .motion .hero-copy h1 span + span { animation-delay: 90ms; }
 @keyframes rise { from { opacity: 0; transform: translateY(var(--space-24)); } }
+
+/* Theme wipe (same effect as the CloudPBX portal): the new theme rises from the bottom edge over the
+   old one. The old snapshot stays still underneath; the new one is clipped to a band that grows from a
+   line at the bottom to the whole window. View Transitions API; without it, a plain switch. */
+html.theme-wipe::view-transition-old(root),
+html.theme-wipe::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.theme-wipe::view-transition-old(root) { z-index: -1; }
+html.theme-wipe::view-transition-new(root) { animation: theme-wipe var(--page-theme-wipe) var(--page-ease-wipe); }
+@keyframes theme-wipe {
+  from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+/* The instant the theme changes: no element fades its own colours, so the new snapshot is clean. */
+html.theme-switching, html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
 
 /* Reduced motion: a complete static page. No transitions, no animations. */
 @media (prefers-reduced-motion: reduce) {
@@ -1134,6 +1195,7 @@ html.menu-open { overflow: hidden; }
       </nav>
       <div class="now" aria-hidden="true" data-now><span class="now-text"><span class="now-num num"></span><span class="now-name"></span></span></div>
       <div class="header-end">
+        <a class="icon-btn lang-btn header-theme" href="uk/" hreflang="uk" lang="uk" aria-label="Українська версія" data-lang-link><span class="icon-now" aria-hidden="true">EN</span><span class="icon-next" aria-hidden="true">УК</span></a>
         <button class="icon-btn header-theme" type="button" data-theme-toggle aria-label="Switch to light theme">
           <svg class="icon-now" aria-hidden="true"><use href="#i-moon"/></svg>
           <svg class="icon-next" aria-hidden="true"><use href="#i-sun"/></svg>
@@ -1166,7 +1228,7 @@ html.menu-open { overflow: hidden; }
             <svg class="icon-now" aria-hidden="true"><use href="#i-moon"/></svg>
             <svg class="icon-next" aria-hidden="true"><use href="#i-sun"/></svg>
           </button>
-          <a class="link" href="privacy.html">Privacy policy</a>
+          <a class="icon-btn lang-btn" href="uk/" hreflang="uk" lang="uk" aria-label="Українська версія" data-lang-link><span class="icon-now" aria-hidden="true">EN</span><span class="icon-next" aria-hidden="true">УК</span></a>
           <span class="grow"></span>
           <a class="btn btn--outline" href="https://play.google.com/store/apps/details?id=io.github.kellyideas.kmito" data-store-link>
             <span class="btn__text">Get Kmito</span>
@@ -1260,17 +1322,17 @@ html.menu-open { overflow: hidden; }
       <div class="how-phone" aria-hidden="true">
         <div class="phone">
           <div class="phone-screen" data-phone>
-            <img class="is-on" src="landing-assets/how-1-answer.jpg" alt="" width="540" height="1105">
-            <img src="landing-assets/how-2-minutes.jpg" alt="" width="540" height="1105">
-            <img src="landing-assets/how-3-warning.jpg" alt="" width="540" height="1105">
-            <img src="landing-assets/how-4-zero.jpg" alt="" width="540" height="1105">
+            <img class="is-on" src="landing-assets/how-1-answer.jpg" data-themed="landing-assets/how-1-answer.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-2-minutes.jpg" data-themed="landing-assets/how-2-minutes.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-3-warning.jpg" data-themed="landing-assets/how-3-warning.jpg" alt="" width="540" height="1105">
+            <img src="landing-assets/how-4-zero.jpg" data-themed="landing-assets/how-4-zero.jpg" alt="" width="540" height="1105">
           </div>
         </div>
         <p class="phone-count"><span data-phone-count>01</span> / 04</p>
       </div>
       <ol class="how-steps" data-steps>
         <li class="step">
-          <div class="step-shot"><img src="landing-assets/how-1-answer.jpg" alt="A wrong answer is greyed out. Kmito says: Not this one. No cost. Look again." width="540" height="1105" loading="lazy" decoding="async"></div>
+          <div class="step-shot"><img src="landing-assets/how-1-answer.jpg" data-themed="landing-assets/how-1-answer.jpg" alt="A wrong answer is greyed out. Kmito says: Not this one. No cost. Look again." width="540" height="1105" loading="lazy" decoding="async"></div>
           <div class="step-body">
             <p class="step-n">01</p>
             <h3>Answer one question.</h3>
@@ -1278,7 +1340,7 @@ html.menu-open { overflow: hidden; }
           </div>
         </li>
         <li class="step">
-          <div class="step-shot"><img src="landing-assets/how-2-minutes.jpg" alt="The right answer prints a slip: made by you, 10 min." width="540" height="1105" loading="lazy" decoding="async"></div>
+          <div class="step-shot"><img src="landing-assets/how-2-minutes.jpg" data-themed="landing-assets/how-2-minutes.jpg" alt="The right answer prints a slip: made by you, 10 min." width="540" height="1105" loading="lazy" decoding="async"></div>
           <div class="step-body">
             <p class="step-n">02</p>
             <h3>Make <span class="num">10 min</span>.</h3>
@@ -1286,7 +1348,7 @@ html.menu-open { overflow: hidden; }
           </div>
         </li>
         <li class="step">
-          <div class="step-shot"><img src="landing-assets/how-3-warning.jpg" alt="A notification: almost out of screen time, 1 min left. Answer a quiz now to earn more." width="540" height="1105" loading="lazy" decoding="async"></div>
+          <div class="step-shot"><img src="landing-assets/how-3-warning.jpg" data-themed="landing-assets/how-3-warning.jpg" alt="A notification: almost out of screen time, 1 min left. Answer a quiz now to earn more." width="540" height="1105" loading="lazy" decoding="async"></div>
           <div class="step-body">
             <p class="step-n">03</p>
             <h3>Get a warning first.</h3>
@@ -1294,7 +1356,7 @@ html.menu-open { overflow: hidden; }
           </div>
         </li>
         <li class="step">
-          <div class="step-shot"><img src="landing-assets/how-4-zero.jpg" alt="A slip: one right answer, 10 min. One minute of screen, 1 min. At zero, I ask again." width="540" height="1105" loading="lazy" decoding="async"></div>
+          <div class="step-shot"><img src="landing-assets/how-4-zero.jpg" data-themed="landing-assets/how-4-zero.jpg" alt="A slip: one right answer, 10 min. One minute of screen, 1 min. At zero, I ask again." width="540" height="1105" loading="lazy" decoding="async"></div>
           <div class="step-body">
             <p class="step-n">04</p>
             <h3>At zero, one question.</h3>
@@ -1465,20 +1527,22 @@ html.menu-open { overflow: hidden; }
   <div class="wrap">
     <div class="section-head">
       <p class="overline">On the phone</p>
-      <h2 class="h2" id="screens-title">The whole idea, in seven screens.</h2>
-      <p class="fine screens-hint"><span class="when-motion">Keep scrolling. The screens move with you.</span><span class="when-static">Scroll the row sideways to see all seven.</span></p>
+      <h2 class="h2" id="screens-title">The whole idea, in nine screens.</h2>
+      <p class="fine screens-hint"><span class="when-motion">Keep scrolling. The screens move with you.</span><span class="when-static">Scroll the row sideways to see all nine.</span></p>
     </div>
   </div>
   <div class="screens-pin" data-screens>
     <div class="screens-stage">
       <div class="screens-track" data-track role="region" aria-label="Screenshots" tabindex="0">
-        <figure class="shot"><img src="landing-assets/screen-1-home.jpg" alt="Home: 7 min of screen time left. A quiz appears when this reaches 0. Start Quiz." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">1 / 7</span><span class="shot-t">Your phone runs on minutes.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-2-chess.jpg" alt="A chess puzzle on an interactive board: white to move, find the mate in 1." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">2 / 7</span><span class="shot-t">Chess on a real board.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-3-numpad.jpg" alt="A math question on a speed numpad: What is 6 times 3?" width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">3 / 7</span><span class="shot-t">Speed math on a keypad.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-4-history.jpg" alt="All-time history: 18 answers, 89 % right, minutes earned and used, a year of days." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">4 / 7</span><span class="shot-t">Every answer, kept.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-5-lock.jpg" alt="Lock screen settings: quiz lock, commitment mode, partner PIN, snooze, Easy start, questions per unlock." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">5 / 7</span><span class="shot-t">Your rules, your switches.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-6-your-turn.jpg" alt="You ask, Kmito answers: Can I switch you off? What if someone calls?" width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">6 / 7</span><span class="shot-t">Then you ask. Kmito answers.</span></figcaption></figure>
-        <figure class="shot"><img src="landing-assets/screen-7-deal.jpg" alt="The Deal slip: your rules, then Kmito's promises." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">7 / 7</span><span class="shot-t">The Deal, fitted to your week.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-1-home.jpg" data-themed="landing-assets/screen-1-home.jpg" alt="Home: 7 min of screen time left. A quiz appears when this reaches 0. Start Quiz." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">1 / 9</span><span class="shot-t">Your phone runs on minutes.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-tracks.jpg" data-themed="landing-assets/screen-tracks.jpg" alt="Tracks and Packs: 8 of 26 packs on, from Astrophysics to Grandmaster Chess, each with its question count and a switch." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">2 / 9</span><span class="shot-t">Packs on, packs off.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-2-chess.jpg" data-themed="landing-assets/screen-2-chess.jpg" alt="A chess puzzle on an interactive board: white to move, find the mate in 1." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">3 / 9</span><span class="shot-t">Chess on a real board.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-3-numpad.jpg" data-themed="landing-assets/screen-3-numpad.jpg" alt="A math question on a speed numpad: What is 6 times 3?" width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">4 / 9</span><span class="shot-t">Speed math on a keypad.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-design.jpg" data-themed="landing-assets/screen-design.jpg" alt="A design question you play with: dial in the outer radius of a card around a 12 dp tile. The preview follows the slider, now at 20 dp, then Apply." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">5 / 9</span><span class="shot-t">Some answers you dial in.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-rare-word.jpg" data-themed="landing-assets/screen-rare-word.jpg" alt="A Rare Words card: Pareidolia, seeing faces or familiar shapes in clouds, stains or electrical sockets. Four answers in Ukrainian and English." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">6 / 9</span><span class="shot-t">One rare word, two languages.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-time-details.jpg" data-themed="landing-assets/screen-time-details.jpg" alt="Screen Time details for 7 days: 11 h 27 m used, 5 h 40 m earned, a bar for each day and the apps that used the time." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">7 / 9</span><span class="shot-t">Where your minutes went.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-4-history.jpg" data-themed="landing-assets/screen-4-history.jpg" alt="All-time history: 18 answers, 89 % right, minutes earned and used, a year of days." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">8 / 9</span><span class="shot-t">Every answer, kept.</span></figcaption></figure>
+        <figure class="shot"><img src="landing-assets/screen-5-lock.jpg" data-themed="landing-assets/screen-5-lock.jpg" alt="Lock screen settings: quiz lock, commitment mode, partner PIN, snooze, Easy start, questions per unlock." width="540" height="1105" loading="lazy" decoding="async"><figcaption><span class="shot-n">9 / 9</span><span class="shot-t">Your rules, your switches.</span></figcaption></figure>
       </div>
     </div>
   </div>
@@ -1630,7 +1694,18 @@ html.menu-open { overflow: hidden; }
       <a class="btn btn--primary btn--hero" href="https://play.google.com/store/apps/details?id=io.github.kellyideas.kmito" data-store-link>
         <span class="btn__slide"><span class="btn__line">Get Kmito</span><span class="btn__line" aria-hidden="true">on Google Play</span></span>
       </a>
-      <p class="fine">For Android phones. No account, no ads.</p>
+      <p class="fine">Testers only for now. For Android phones. No account, no ads.</p>
+    </div>
+    <!-- Testers: the dotted address is the source tag (Gmail ignores dots, so it reaches
+         kellyideas.team@gmail.com; the To line still shows kelly.ideas.team = this page). -->
+    <div class="tester" aria-labelledby="tester-title">
+      <h3 class="tester-title" id="tester-title">Want it before everyone else?</h3>
+      <p class="tester-text">Kmito is in closed testing on Google Play. Send us one email from the Google account on your Android phone. We add you to the testers and reply with the link.</p>
+      <a class="btn btn--outline" href="mailto:kelly.ideas.team@gmail.com?subject=Kmito%20tester&amp;body=Hi%20Kelly%20Ideas%2C%0A%0APlease%20add%20me%20to%20the%20Kmito%20testers.%0A%0AMy%20Google%20account%20%28the%20one%20on%20my%20Android%20phone%29%3A%20%0A">
+        <span class="btn__text">Ask to join as a tester</span>
+        <span class="btn__wipe" aria-hidden="true"><span class="btn__wipe-text"></span></span>
+      </a>
+      <p class="fine">Or write to <a class="link" href="mailto:kelly.ideas.team@gmail.com?subject=Kmito%20tester">kelly.ideas.team@gmail.com</a></p>
     </div>
   </div>
 </section>
@@ -1648,6 +1723,29 @@ html.menu-open { overflow: hidden; }
   </div>
 </footer>
 
+<!-- Tester gate: while Kmito is in closed testing, every Get Kmito link asks first (script: "tester gate").
+     To drop it when the Play listing is public: set TESTER_GATE = false, or delete this dialog and that block. -->
+<dialog class="gate" id="tester-gate" aria-labelledby="gate-title" aria-describedby="gate-text">
+  <form class="gate-card" method="dialog">
+    <button class="icon-btn gate-close" value="close" aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <p class="overline">Closed testing</p>
+    <h2 class="gate-title" id="gate-title">Kmito is open to testers for now.</h2>
+    <p class="gate-text" id="gate-text">Google Play shows the app only to people on the tester list. On the list? The page opens as usual. Not yet? Send us one email and we add you.</p>
+    <div class="gate-actions">
+      <button class="btn btn--primary" value="tester">
+        <span class="btn__slide"><span class="btn__line">I'm a tester</span><span class="btn__line" aria-hidden="true">Open Google Play</span></span>
+      </button>
+      <a class="btn btn--outline" href="#get" data-gate-join>
+        <span class="btn__text">Become a tester</span>
+        <span class="btn__wipe" aria-hidden="true"><span class="btn__wipe-text"></span></span>
+      </a>
+    </div>
+  </form>
+</dialog>
+
+<!-- Words the script writes. The Ukrainian page (i18n/make_uk.py) swaps this block for its own. -->
+<script type="application/json" id="ui-data">{"themeToLight": "Switch to light theme", "themeToDark": "Switch to dark theme", "openSections": "Open sections", "closeSections": "Close sections", "langNames": {"uk": "Ukrainian", "de": "German"}, "typeNumber": "Type the number", "numberLabel": "Your answer, a number", "delete": "Delete", "submit": "Submit", "markerLabel": "Marker on the line. The nearest number is your answer.", "nearest": "Nearest: ", "setMarker": "Set the marker", "showFour": "Show the four answers instead", "ruledDimmed": ", dimmed, not this one", "ruled": ", not this one", "gapWords": "Words for the gap", "pickMove": "Or pick the move", "white": "white", "black": "black", "pieces": {"k": "king", "q": "queen", "r": "rook", "b": "bishop", "n": "knight", "p": "pawn"}, "answer": "Answer: ", "mixCount": "<strong>{n}</strong> {packs} on · <strong>{q}</strong> {questions}", "kidsCount": "<strong>{n}</strong> {packs} for ages {age} · <strong>{q}</strong> {questions}", "kidsHere": " · {n} of them here", "words": {"pack": {"one": "pack", "other": "packs"}, "question": {"one": "question", "other": "questions"}}, "answers": "Answers", "plusTen": "+10 min"}</script>
+
 <script>
 (() => {
   'use strict';
@@ -1658,10 +1756,53 @@ html.menu-open { overflow: hidden; }
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   let motion = !reduce.matches;
+
+  /* ---------- words: English here, Ukrainian on uk/ (same keys) ---------- */
+  const LANG = root.lang || 'en';
+  const UI = JSON.parse(document.getElementById('ui-data').textContent);
+  const plurals = new Intl.PluralRules(LANG);
+  const word = (key, n) => { const f = UI.words[key]; return f[plurals.select(n)] || f.other; };
+  const fill = (tpl, vals) => tpl.replace(/\{(\w+)\}/g, (m, k) => (k in vals ? vals[k] : m));
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
   /* ---------- store links ---------- */
   document.querySelectorAll('[data-store-link]').forEach(a => a.setAttribute('href', STORE_URL));
+
+  /* ---------- tester gate ----------
+     While Kmito is in closed testing the Play page opens only for listed testers, so every
+     [data-store-link] asks first: a tester confirms and goes on (remembered in this browser);
+     anyone else gets the "Become a tester" email. When the listing is public, set
+     TESTER_GATE = false, or delete this block and <dialog id="tester-gate">. */
+  const TESTER_GATE = true;
+  const guardStoreLinks = () => {
+    const gate = document.getElementById('tester-gate');
+    if (!gate || typeof gate.showModal !== 'function') return;  // old browsers: the link just works
+    const join = gate.querySelector('[data-gate-join]');
+    const ask = document.querySelector('.tester .btn');  // the tester email (same tag, same words)
+    if (ask) join.href = ask.getAttribute('href');
+    const KEY = 'kmito-tester';
+    const known = () => { try { return localStorage.getItem(KEY) === 'yes'; } catch (e) { return false; } };
+    let pending = null;
+    document.querySelectorAll('[data-store-link]').forEach(a => a.addEventListener('click', e => {
+      if (known() || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      pending = a;
+      gate.showModal();
+    }));
+    // Buttons act on click (not on the dialog's close event, which some browsers deliver late or not at all).
+    gate.addEventListener('click', e => { if (e.target === gate) gate.close(); });  // tap outside the card
+    gate.querySelector('.gate-close').addEventListener('click', e => { e.preventDefault(); gate.close(); });
+    join.addEventListener('click', () => gate.close());
+    gate.querySelector('button[value="tester"]').addEventListener('click', e => {
+      e.preventDefault();
+      const a = pending; pending = null;
+      gate.close();
+      if (!a) return;
+      try { localStorage.setItem(KEY, 'yes'); } catch (err) {}
+      if (a.target === '_blank') window.open(a.href, '_blank', 'noopener'); else location.assign(a.href);
+    });
+  };
+  if (TESTER_GATE) guardStoreLinks();
   document.querySelectorAll('.btn--outline').forEach(b => {
     const text = b.querySelector('.btn__text');
     const copy = b.querySelector('.btn__wipe-text');
@@ -1754,17 +1895,54 @@ html.menu-open { overflow: hidden; }
       const icons = btn.querySelectorAll('use');
       icons[0].setAttribute('href', now === 'dark' ? '#i-moon' : '#i-sun');
       icons[1].setAttribute('href', now === 'dark' ? '#i-sun' : '#i-moon');
-      btn.setAttribute('aria-label', now === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      btn.setAttribute('aria-label', now === 'dark' ? UI.themeToLight : UI.themeToDark);
     });
   };
-  themeBtns.forEach(btn => btn.addEventListener('click', () => {
-    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  // Changes the theme at once with every CSS transition off for that frame, so hundreds of
+  // elements do not fade their own colours and the wipe's new snapshot does not catch them half way.
+  const flipTheme = next => {
+    root.classList.add('theme-switching');
     root.setAttribute('data-theme', next);
     try { localStorage.setItem('kmito-theme', next); } catch (e) {}
     paintThemeButton();
+    paintShots();
+    void getComputedStyle(root).color;
+    root.classList.remove('theme-switching');
+  };
+  // The new theme rises from the bottom edge (as the CloudPBX portal). Reduced motion and browsers
+  // without View Transitions get the plain switch.
+  themeBtns.forEach(btn => btn.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    if (typeof document.startViewTransition !== 'function' || reduce.matches) { flipTheme(next); return; }
+    root.classList.add('theme-wipe');
+    const wipe = document.startViewTransition(() => flipTheme(next));
+    wipe.ready.catch(() => {});  // a second click skips the running wipe; that is fine
+    wipe.finished.finally(() => root.classList.remove('theme-wipe'));
   }));
-  sysDark.addEventListener('change', paintThemeButton);
+  // App screenshots follow the page theme: a light page shows the app in light mode (light/ next to each file).
+  // A missing file steps back: light -> dark, then the Ukrainian set (uk/) -> the English one.
+  const themedShots = [...document.querySelectorAll('img[data-themed]')];
+  themedShots.forEach(img => img.addEventListener('error', () => {
+    const now = img.getAttribute('src');
+    const back = now.includes('/light/') ? now.replace('light/', '') : now.includes('/uk/') ? now.replace('uk/', '') : null;
+    if (back) img.src = back;
+  }));
+  const paintShots = () => {
+    const light = currentTheme() === 'light';
+    themedShots.forEach(img => {
+      const dark = img.dataset.themed;
+      const want = light ? dark.replace(/([^/]+)$/, 'light/$1') : dark;
+      if (img.getAttribute('src') !== want) img.src = want;
+    });
+  };
+  sysDark.addEventListener('change', () => { paintThemeButton(); paintShots(); });
+  // The language link keeps the section you read: the other page opens at the same anchor.
+  document.querySelectorAll('[data-lang-link]').forEach(a => a.addEventListener('click', () => {
+    const id = location.hash || (document.querySelector('[data-nav].is-active')?.getAttribute('href') ?? '');
+    if (id.startsWith('#')) a.href = a.getAttribute('href').split('#')[0] + id;
+  }));
   paintThemeButton();
+  paintShots();
 
   /* ---------- the question in the hero ---------- */
   const quiz = document.querySelector('[data-quiz]');
@@ -1836,7 +2014,7 @@ html.menu-open { overflow: hidden; }
   /* ---------- packs: switch packs on and off, answer a card from the mix ----------
      The cards are real questions copied from app/src/main/assets/packs/<pack>/en.json.
      The rule of the app holds: at least one pack is always on. */
-  const LANG_NAMES = { uk: 'Ukrainian', de: 'German' };
+  const LANG_NAMES = UI.langNames;
   // One engine, two decks: the adult mixer, and the sample cards of the packs written for children
   const makeDeck = (mixEl, mixData, kids) => {
   const mixPacks = Object.fromEntries(mixData.packs.map(p => [p.key, p]));
@@ -1848,7 +2026,7 @@ html.menu-open { overflow: hidden; }
   const mixLevel = mixEl.querySelector('[data-mix-level]');
   const mixStage = mixEl.querySelector('[data-mix-stage]');
   const mixNext = mixEl.querySelector('[data-mix-next]');
-  const fmt = n => n.toLocaleString('en');
+  const fmt = n => n.toLocaleString(LANG);
   const isOn = t => t.getAttribute('aria-pressed') === 'true';
   const onKeys = () => tiles.filter(isOn).map(t => t.dataset.pack);
   const seen = new Set();
@@ -1862,7 +2040,7 @@ html.menu-open { overflow: hidden; }
   const writeCount = () => {
     const on = tiles.filter(isOn);
     const q = on.reduce((sum, t) => sum + Number(t.dataset.count), 0);
-    mixCount.innerHTML = `<strong>${on.length}</strong> ${on.length === 1 ? 'pack' : 'packs'} on · <strong>${fmt(q)}</strong> questions`;
+    mixCount.innerHTML = fill(UI.mixCount, { n: on.length, packs: word('pack', on.length), q: fmt(q), questions: word('question', q) });
   };
 
   // The next card: from one pack, or from the mix; no repeats until the set is used up
@@ -1888,16 +2066,16 @@ html.menu-open { overflow: hidden; }
   };
   const ruleOut = (b, label) => {
     b.classList.add('is-ruled-out'); b.setAttribute('aria-disabled', 'true');
-    const sr = el('span', 'sr-only', label || ', dimmed, not this one'); b.append(sr);
+    const sr = el('span', 'sr-only', label || UI.ruledDimmed); b.append(sr);
   };
   const PIECES = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
-  const PIECE_NAMES = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
+  const PIECE_NAMES = UI.pieces;
 
   const buildForm = (card, done) => {
     const box = el('div', 'mix-form');
     const wrong = () => mixSay(mixLine.dataset.wrong);
     if (card.form === 'choices') {
-      const opts = el('div', 'options'); opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Answers');
+      const opts = el('div', 'options'); opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', UI.answers);
       if (card.lang) opts.lang = card.lang;
       card.opts.forEach((o, k) => {
         const b = optionButton(o, k);
@@ -1911,17 +2089,17 @@ html.menu-open { overflow: hidden; }
     }
     if (card.form === 'numpad') {
       const np = el('form', 'np'); np.setAttribute('autocomplete', 'off');
-      const input = el('input', 'np-display'); input.type = 'text'; input.inputMode = 'decimal'; input.placeholder = 'Type the number'; input.setAttribute('aria-label', 'Your answer, a number');
+      const input = el('input', 'np-display'); input.type = 'text'; input.inputMode = 'decimal'; input.placeholder = UI.typeNumber; input.setAttribute('aria-label', UI.numberLabel);
       const keys = el('div', 'np-keys');
       ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'].forEach(k => {
         const b = el('button', 'np-key', k); b.type = 'button';
-        if (k === '⌫') b.setAttribute('aria-label', 'Delete');
+        if (k === '⌫') b.setAttribute('aria-label', UI.delete);
         b.addEventListener('click', () => { input.value = k === '⌫' ? input.value.slice(0, -1) : input.value + k; });
         keys.append(b);
       });
       const submit = el('button', 'btn btn--outline'); submit.type = 'submit';
-      submit.append(el('span', 'btn__text', 'Submit'));
-      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', 'Submit')); submit.append(wipe);
+      submit.append(el('span', 'btn__text', UI.submit));
+      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', UI.submit)); submit.append(wipe);
       np.append(input, keys, submit);
       np.addEventListener('submit', e => {
         e.preventDefault();
@@ -1943,7 +2121,7 @@ html.menu-open { overflow: hidden; }
         const tick = el('span', 'marker-tick'); tick.style.left = (card.pos[k] * 100) + '%'; line.append(tick);
       });
       const range = el('input', 'marker-range'); range.type = 'range'; range.min = '0'; range.max = '1000'; range.step = '1'; range.value = '500';
-      range.setAttribute('aria-label', 'Marker on the line. The nearest number is your answer.');
+      range.setAttribute('aria-label', UI.markerLabel);
       line.append(range);
       const read = el('p', 'marker-read');
       const out = new Set();
@@ -1953,12 +2131,12 @@ html.menu-open { overflow: hidden; }
         card.pos.forEach((p, k) => { if (!out.has(k) && Math.abs(p - f) < bd) { bd = Math.abs(p - f); best = k; } });
         return best;
       };
-      const show = () => { const k = nearest(); read.innerHTML = ''; read.append('Nearest: ', el('strong', '', card.opts[k])); range.setAttribute('aria-valuetext', card.opts[k]); };
+      const show = () => { const k = nearest(); read.innerHTML = ''; read.append(UI.nearest, el('strong', '', card.opts[k])); range.setAttribute('aria-valuetext', card.opts[k]); };
       range.addEventListener('input', show);
       const actions = el('div', 'mix-actions');
-      const set = el('button', 'btn btn--outline'); set.type = 'button'; set.append(el('span', 'btn__text', 'Set the marker'));
-      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', 'Set the marker')); set.append(wipe);
-      const swap = el('button', 'ask-reset link', 'Show the four answers instead'); swap.type = 'button';
+      const set = el('button', 'btn btn--outline'); set.type = 'button'; set.append(el('span', 'btn__text', UI.setMarker));
+      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', UI.setMarker)); set.append(wipe);
+      const swap = el('button', 'ask-reset link', UI.showFour); swap.type = 'button';
       set.addEventListener('click', () => {
         const k = nearest(); if (k < 0) return;
         if (k === card.correct) { done(); return; }
@@ -1975,14 +2153,14 @@ html.menu-open { overflow: hidden; }
       show();
     }
     if (card.form === 'gap') {
-      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', 'Words for the gap');
+      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', UI.gapWords);
       card.opts.forEach((o, k) => {
         const b = el('button', 'chip', o); b.type = 'button';
         b.addEventListener('click', () => {
           if (b.getAttribute('aria-disabled') === 'true') return;
           const slot = mixStage.querySelector('.gap-slot');
           if (k === card.correct) { b.classList.add('is-picked'); if (slot) { slot.textContent = o; slot.classList.add('is-filled'); } done(); }
-          else { ruleOut(b, ', not this one'); wrong(); }
+          else { ruleOut(b, UI.ruled); wrong(); }
         });
         chips.append(b);
       });
@@ -2006,7 +2184,7 @@ html.menu-open { overflow: hidden; }
         const b = el('button', 'sq' + ((s.r + s.f) % 2 === 0 ? ' is-light' : '')); b.type = 'button';
         b.tabIndex = idx === focusIdx ? 0 : -1;
         const white = s.p && s.p === s.p.toUpperCase();
-        b.setAttribute('aria-label', name(s) + (s.p ? ', ' + (white ? 'white ' : 'black ') + PIECE_NAMES[s.p.toLowerCase()] : ''));
+        b.setAttribute('aria-label', name(s) + (s.p ? ', ' + (white ? UI.white : UI.black) + ' ' + PIECE_NAMES[s.p.toLowerCase()] : ''));
         if (s.p) { const pc = el('span', 'pc ' + (white ? 'is-w' : 'is-b'), PIECES[s.p.toLowerCase()] + '︎'); pc.setAttribute('aria-hidden', 'true'); b.append(pc); }
         if (s.f === 0) { const c = el('span', 'sq-coord', String(8 - s.r)); c.setAttribute('aria-hidden', 'true'); b.append(c); }
         b.addEventListener('click', () => {
@@ -2030,12 +2208,12 @@ html.menu-open { overflow: hidden; }
       });
       box.append(board);
       // The moves of the card, as in the app: "or choose below"
-      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', 'Or pick the move');
+      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', UI.pickMove);
       card.opts.forEach((o, k) => {
         const c = el('button', 'chip', o); c.type = 'button';
         c.addEventListener('click', () => {
           if (c.getAttribute('aria-disabled') === 'true' || board.dataset.done) return;
-          if (k === card.correct) { c.classList.add('is-picked'); board.dataset.done = '1'; done(); } else { ruleOut(c, ', not this one'); wrong(); }
+          if (k === card.correct) { c.classList.add('is-picked'); board.dataset.done = '1'; done(); } else { ruleOut(c, UI.ruled); wrong(); }
         });
         chips.append(c);
       });
@@ -2049,15 +2227,15 @@ html.menu-open { overflow: hidden; }
     if (kids) {   // no slip and no minutes here: the sample shows the answer and its why
       const a = el('p', 'mix-answer'); const v = el('strong', '', card.form === 'numpad' ? card.num : card.opts[card.correct]);
       if (card.lang) v.lang = card.lang;
-      a.append('Answer: ', v); res.append(a);
+      a.append(UI.answer, v); res.append(a);
       if (card.why) { const w = el('p', 'mix-why', card.why); if (card.lang) w.lang = card.lang; res.append(w); }
       return res;
     }
     const slip = el('div', 'slip');
     slip.innerHTML = '<div class="punch-row" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
       '<p class="slip-head" data-feed>Made by you</p>' +
-      '<div class="slip-total" data-feed><span class="spark" aria-hidden="true" data-spark><svg><use href="#i-logo"/></svg></span><span class="big">+10 min</span></div>' +
-      '<dl><div class="slip-line" data-feed><dt></dt><span class="leader" aria-hidden="true"></span><dd>+10 min</dd></div></dl>';
+      '<div class="slip-total" data-feed><span class="spark" aria-hidden="true" data-spark><svg><use href="#i-logo"/></svg></span><span class="big">' + UI.plusTen + '</span></div>' +
+      '<dl><div class="slip-line" data-feed><dt></dt><span class="leader" aria-hidden="true"></span><dd>' + UI.plusTen + '</dd></div></dl>';
     slip.querySelector('dt').textContent = mixPacks[card.pack].title;
     res.append(slip);
     if (card.why) res.append(el('p', 'mix-why', card.why));
@@ -2101,7 +2279,8 @@ html.menu-open { overflow: hidden; }
   };
   const countLine = a => {
     const info = mixData.ages[a], n = tiles.filter(t => t.dataset.age === a).length;
-    return `<strong>${info.packs}</strong> packs for ages ${a.replace('-', '–')} · <strong>${fmt(info.questions)}</strong> questions` + (n < info.packs ? ` · ${n} of them here` : '');
+    return fill(UI.kidsCount, { n: info.packs, packs: word('pack', info.packs), age: a.replace('-', '–'), q: fmt(info.questions), questions: word('question', info.questions) })
+      + (n < info.packs ? fill(UI.kidsHere, { n }) : '');
   };
   const right = (card, node) => {
     mixSay(mixLine.dataset.right);
@@ -2304,7 +2483,7 @@ html.menu-open { overflow: hidden; }
     header.classList.toggle('is-open', open);
     root.classList.toggle('menu-open', open);
     menuBtn.setAttribute('aria-expanded', String(open));
-    menuBtn.setAttribute('aria-label', open ? 'Close sections' : 'Open sections');
+    menuBtn.setAttribute('aria-label', open ? UI.closeSections : UI.openSections);
     if (open) { menu.removeAttribute('inert'); (menuLinks[Math.max(0, activeNav)] || menuLinks[0]).focus({ preventScroll: true }); }
     else { menu.setAttribute('inert', ''); if (returnFocus) menuBtn.focus({ preventScroll: true }); }
   };
