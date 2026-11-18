@@ -184,6 +184,8 @@
   --page-type-quote: clamp(32px, 5.4vw, 72px);
   --page-tracking-tight: -0.035em;
   --page-measure: 34ch;
+  --page-title-weight: var(--font-weight-bold);   /* landing titles: Bold, as the Figma Landing styles */
+  --page-font-chess: "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", var(--font-family-sans);  /* chess glyphs: fonts that have them */
   --page-glow-size: clamp(160px, 20vmax, 300px);       /* small, light part of the glow */
   --page-glow-size-big: clamp(560px, 80vmax, 1240px);  /* big, heavy part of the glow */
 }
@@ -216,6 +218,11 @@
   --slip-rule: #6B6858;
   --slip-spark: #D2FF28;
   --slip-hole: var(--color-background);
+  /* chess/* (tokens.json color/chess/*: the board looks the same in every mode) */
+  --color-chess-square-light: #334155;
+  --color-chess-square-dark: #0F172A;
+  --color-chess-piece-white: #F8FAFC;
+  --color-chess-piece-black: #38BDF8;
   /* page alias: the phone frame (graphite ink on paper) */
   --page-phone-frame: var(--color-on-background);
   --page-phone-bezel: var(--color-on-background);  /* black band between frame and screen */
@@ -343,7 +350,7 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
   color: var(--color-on-surface-variant);
 }
 .h2 {
-  font-weight: var(--type-app-screen-title-weight);
+  font-weight: var(--page-title-weight);
   font-size: var(--type-display-small-size);
   line-height: var(--type-display-small-line-height);
   letter-spacing: var(--type-app-screen-title-tracking);
@@ -551,6 +558,8 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
    choreographies at random, then another one after every 10 s at rest. The moves come
    from #orbit-data (scripts/make_orbit.py); the script below plays them. Off with
    reduced motion. */
+/* Wordmark: the drawn letters of Figma Landing/Logo (74.07 x 21 beside the 28 mark), in the text colour */
+.brand .wordmark { display: block; height: calc(var(--type-icon-28-size) * 0.75); width: auto; aspect-ratio: 74.07 / 21; }
 .brand .orbit { fill: currentColor; }
 .brand .orbit-arcs, .brand .orbit-dots, .brand .orbit-core { transform-origin: 256px 256px; }
 
@@ -658,7 +667,7 @@ html.menu-open { overflow: hidden; }
 .hero .wrap { display: grid; gap: calc(var(--space-40) * 1.5); align-items: center; }
 .hero-copy .overline { margin-bottom: var(--space-20); }
 .hero h1 {
-  font-weight: var(--type-app-screen-title-weight);
+  font-weight: var(--page-title-weight);
   font-size: var(--page-type-hero);
   line-height: var(--page-type-hero-line);
   letter-spacing: var(--page-tracking-hero);
@@ -794,7 +803,7 @@ html.menu-open { overflow: hidden; }
 .step-shot { container-type: inline-size; }
 .step-shot img, .shot img { width: 100%; border-radius: var(--page-phone-radius); border: var(--page-phone-frame-w) solid var(--page-phone-frame); padding: var(--page-phone-bezel-w); background: var(--page-phone-bezel); }
 .step-n { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); color: var(--color-on-surface-variant); }
-.step h3 { margin-top: var(--space-8); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
+.step h3 { margin-top: var(--space-8); font-weight: var(--page-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
 .step p { margin-top: var(--space-12); color: var(--color-on-surface-variant); max-width: var(--page-measure); }
 
 /* Motion layout: the phone pins, captions pass it */
@@ -814,6 +823,144 @@ html.menu-open { overflow: hidden; }
   .step h3 { font-size: var(--type-display-small-size); line-height: var(--type-display-small-line-height); }
   .step p { font-size: var(--type-title-large-size); line-height: var(--type-title-large-line-height); letter-spacing: 0; }
 }
+
+/* =====================================================================
+   8b. PACKS: a mixer of pack switches and a live lock card
+   ===================================================================== */
+.mix { display: grid; gap: var(--space-40); margin-top: calc(var(--space-40) * 1.5); align-items: start; }
+@media (min-width: 900px) { .mix { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); } }
+.rack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-10); }
+@media (min-width: 560px) { .rack { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tile {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: var(--space-12);
+  min-height: calc(var(--size-option-min) * 2); padding: var(--space-12) var(--space-14);
+  border: var(--size-picked-border) solid var(--color-outline); border-radius: var(--radius-lg);
+  background: transparent; color: var(--color-on-surface-variant);
+  font: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--motion-selection) var(--ease-standard), color var(--motion-selection) var(--ease-standard), background-color var(--motion-selection) var(--ease-standard);
+}
+.tile::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-surface-variant); transform: translateX(-101%); transition: transform var(--motion-page) var(--ease-standard); }
+.tile-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-8); }
+.tile-name { font-weight: var(--font-weight-bold); font-size: var(--type-title-medium-size); line-height: var(--type-title-medium-line-height); letter-spacing: var(--type-title-medium-tracking); text-wrap: balance; transition: transform var(--motion-page) var(--ease-standard); }
+.tile-hole { position: relative; flex: none; margin-top: var(--space-6); width: var(--size-hole); height: var(--size-hole); border-radius: var(--radius-full); border: var(--size-hole-ring) solid currentColor; }
+.tile-hole::after { content: ""; position: absolute; inset: calc(var(--size-hole-ring) * -1); border-radius: inherit; background: currentColor; transform: scale(0); transition: transform var(--motion-punch) var(--ease-standard); }
+.tile-meta { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-chip-size); line-height: var(--type-mono-chip-line-height); text-transform: uppercase; }
+.tile[aria-pressed="true"] { border-color: var(--color-on-surface); color: var(--color-on-surface); background: var(--color-surface); }
+.tile[aria-pressed="true"] .tile-hole::after { transform: scale(1); }
+.tile[aria-pressed="true"] .tile-meta { color: var(--color-on-surface-variant); }
+@media (hover: hover) {
+  .tile:hover::before { transform: translateX(0); }
+  .tile:hover .tile-name { transform: translateX(var(--space-4)); }
+}
+.tile:focus-visible::before { transform: translateX(0); }
+.tile:focus-visible .tile-name { transform: translateX(var(--space-4)); }
+.tile:active { transform: scale(0.95); }
+.tile.is-nudge { animation: tile-nudge calc(var(--motion-page) * 1.5) var(--ease-standard) 1; }
+@keyframes tile-nudge { 20% { transform: translateX(calc(var(--space-6) * -1)); } 45% { transform: translateX(var(--space-6)); } 70% { transform: translateX(calc(var(--space-2) * -1)); } }
+.rack-count { margin-top: var(--space-16); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); color: var(--color-on-surface-variant); }
+.rack-count strong { color: var(--color-on-surface); }
+.rack-note { margin-top: var(--space-8); max-width: var(--page-measure); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+/* The rack fans in from the side, tile by tile */
+.motion .rack.reveal { opacity: 1; transform: none; }
+.motion .rack .tile { opacity: 0; transform: translateX(calc(var(--space-40) * -1)) rotate(-4deg); transform-origin: left bottom; transition: opacity var(--motion-slip) var(--ease-standard), transform var(--motion-slip) var(--page-ease-spring), border-color var(--motion-selection) var(--ease-standard), color var(--motion-selection) var(--ease-standard), background-color var(--motion-selection) var(--ease-standard); transition-delay: calc(var(--i, 0) * 50ms), calc(var(--i, 0) * 50ms), 0s, 0s, 0s; }
+.motion .rack.is-in .tile { opacity: 1; transform: none; }
+.motion .rack.is-in .tile:active { transform: scale(0.95); }
+
+/* The lock card: same card as the hero question */
+.mix-card { margin-inline: 0; }
+.mix-card .kmito-says { margin-top: var(--space-16); }
+.mix-stage { position: relative; margin-top: var(--space-16); }
+.mix-deal.is-dealing { animation: mix-deal-in var(--motion-slip) var(--ease-standard) both; }
+@keyframes mix-deal-in { from { opacity: 0; transform: translateY(var(--space-24)); } }
+.mix-q { margin-top: var(--space-8); font-weight: var(--font-weight-bold); font-size: var(--type-title-large-size); line-height: var(--type-title-large-line-height); text-wrap: pretty; }
+.mix-prompt { margin-top: var(--space-8); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); }
+.mix-why { margin-top: var(--space-16); color: var(--color-on-surface-variant); font-size: var(--type-body-medium-size); line-height: var(--type-body-medium-line-height); letter-spacing: var(--type-body-medium-tracking); text-wrap: pretty; }
+.mix-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12) var(--space-24); margin-top: var(--space-16); }
+.mix-actions .btn { min-height: var(--size-header-control); height: var(--size-header-control); padding-inline: var(--space-16); }
+.mix-card .slip { margin-top: var(--space-16); }
+.mix-measure { position: absolute; visibility: hidden; pointer-events: none; inset-inline: 0; top: 0; }
+
+/* Chips: the moves of a board and the words of a gap */
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-16); }
+.chip {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: var(--size-header-control); padding: var(--space-6) var(--space-14);
+  border: var(--size-hairline) solid var(--color-outline); border-radius: var(--radius-full);
+  background: var(--color-surface-variant); color: var(--color-on-surface);
+  font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.chip::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-outline); transform: translateX(-101%); transition: transform var(--motion-page) var(--ease-standard); }
+@media (hover: hover) { .chip:not([aria-disabled="true"]):hover::before { transform: translateX(0); } }
+.chip:not([aria-disabled="true"]):focus-visible::before { transform: translateX(0); }
+.chip.is-ruled-out { opacity: var(--tint-38); cursor: default; text-decoration: line-through; }
+.chip.is-picked { border-color: var(--color-on-surface); background: var(--color-surface); }
+
+/* Fill the gap */
+.gap-slot { display: inline-block; min-width: calc(var(--space-40) * 2); border-bottom: var(--size-picked-border) dashed var(--color-on-surface-variant); text-align: center; font-family: var(--font-family-mono); }
+.gap-slot.is-filled { border-bottom-style: solid; border-bottom-color: var(--color-on-surface); }
+
+/* Numpad */
+.np { margin-top: var(--space-16); display: grid; gap: var(--space-10); }
+.np-display { width: 100%; min-height: var(--size-option-min); padding: var(--space-8) var(--space-16); border: var(--size-hairline) solid var(--color-outline); border-radius: var(--radius-md); background: var(--color-surface-variant); color: var(--color-on-surface); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); text-align: end; letter-spacing: 0; }
+.np-display::placeholder { color: var(--color-on-surface-variant); opacity: var(--tint-65); }
+.np-keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.np-key { position: relative; isolation: isolate; overflow: hidden; min-height: var(--size-target); border: 0; border-radius: var(--radius-md); background: var(--color-surface-variant); color: var(--color-on-surface); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-title-large-size); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.np-key::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-outline); transform: translateY(101%); transition: transform var(--motion-content) var(--ease-standard); }
+@media (hover: hover) { .np-key:hover::before { transform: none; } }
+.np-key:focus-visible::before { transform: none; }
+.np-key:active { transform: scale(0.95); }
+
+/* Marker on a line (powers of ten, as in the app) */
+.marker { margin-top: var(--space-16); }
+.marker-scale { position: relative; height: calc(var(--type-mono-chip-line-height) * 2 + var(--space-8)); }
+.marker-label { position: absolute; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-chip-size); line-height: var(--type-mono-chip-line-height); color: var(--color-on-surface-variant); }
+.marker-label.is-start { transform: translateX(-20%); }
+.marker-label.is-end { transform: translateX(-80%); }
+.marker-label.is-low { top: calc(var(--type-mono-chip-line-height) + var(--space-4)); }
+.marker-label.is-out { opacity: var(--tint-38); text-decoration: line-through; }
+.marker-line { position: relative; }
+.marker-tick { position: absolute; top: 50%; width: var(--size-hairline); height: var(--space-12); transform: translate(-50%, -50%); background: var(--color-on-surface-variant); pointer-events: none; }
+.marker-range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: var(--size-target); margin: 0; background: transparent; cursor: pointer; }
+.marker-range::-webkit-slider-runnable-track { height: var(--space-4); border-radius: var(--radius-full); background: var(--color-outline); }
+.marker-range::-moz-range-track { height: var(--space-4); border-radius: var(--radius-full); background: var(--color-outline); }
+.marker-range::-webkit-slider-thumb { -webkit-appearance: none; width: var(--space-24); height: var(--space-24); margin-top: calc((var(--space-4) - var(--space-24)) / 2); border-radius: var(--radius-full); background: var(--color-on-surface); border: var(--space-4) solid var(--color-surface); }
+.marker-range::-moz-range-thumb { width: var(--space-24); height: var(--space-24); border-radius: var(--radius-full); background: var(--color-on-surface); border: var(--space-4) solid var(--color-surface); }
+.marker-range:focus-visible { outline: none; }
+.marker-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--space-2) var(--color-on-surface); }
+.marker-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--space-2) var(--color-on-surface); }
+.marker-read { margin-top: var(--space-8); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); color: var(--color-on-surface-variant); }
+.marker-read strong { color: var(--color-on-surface); }
+
+/* Chess board (chess/* tokens, as in the app) */
+.board { container-type: inline-size; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); width: 100%; max-width: calc(var(--space-40) * 8); margin-top: var(--space-16); border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1; }
+.sq { position: relative; display: grid; place-items: center; aspect-ratio: 1; padding: 0; border: 0; background: var(--color-chess-square-dark); cursor: pointer; font-size: 9cqi; line-height: 1; -webkit-tap-highlight-color: transparent; }
+.sq.is-light { background: var(--color-chess-square-light); }
+.sq .pc { font-family: var(--page-font-chess); }
+.sq .pc.is-w { color: var(--color-chess-piece-white); }
+.sq .pc.is-b { color: var(--color-chess-piece-black); }
+.sq.is-sel { box-shadow: inset 0 0 0 var(--space-4) var(--color-chess-piece-white); }
+.sq.is-to { box-shadow: inset 0 0 0 var(--space-4) var(--color-chess-piece-black); }
+.sq:focus-visible { outline: var(--space-2) solid var(--color-chess-piece-white); outline-offset: calc(var(--space-2) * -1); }
+.sq-coord { position: absolute; left: 4%; bottom: 2%; font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: 3cqi; color: var(--color-chess-piece-white); opacity: var(--tint-45); }
+
+/* Packs written for children: the same tiles and card, told to the adult reader */
+.kids { margin-top: calc(var(--space-40) * 2); padding-top: calc(var(--space-40) * 1.5); border-top: var(--size-hairline) solid var(--color-outline); }
+.kids-head { max-width: 46rem; }
+.kids-title { font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); text-wrap: balance; }
+.kids-lead { margin-top: var(--space-12); max-width: var(--page-measure); color: var(--color-on-surface-variant); font-size: var(--type-body-large-size); line-height: var(--type-body-large-line-height); text-wrap: pretty; }
+.kids .mix { margin-top: var(--space-24); }
+.age-switch { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-bottom: var(--space-16); }
+.age-btn { color: var(--color-on-surface-variant); background: transparent; }
+.age-btn[aria-pressed="true"] { border-color: var(--color-on-surface); background: var(--color-surface); color: var(--color-on-surface); }
+.rack.kids-rack { grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
+.rack .tile[hidden] { display: none; }
+.mix-answer { margin-top: var(--space-16); font-family: var(--font-family-mono); font-size: var(--type-mono-label-large-size); line-height: var(--type-mono-label-large-line-height); color: var(--color-on-surface-variant); }
+.mix-answer strong { color: var(--color-on-surface); }
+
+.packs-foot { margin-top: calc(var(--space-40) * 1.5); color: var(--color-on-surface-variant); }
+.packs-foot .link { color: var(--color-on-surface); }
 
 /* =====================================================================
    9. SCREENSHOTS: vertical scroll drives a horizontal strip
@@ -856,7 +1003,7 @@ html.menu-open { overflow: hidden; }
 .moment::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-surface); transform: translateY(101%); transition: transform var(--motion-page) var(--ease-standard); }
 .moment-n { font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-label-large-size); line-height: var(--type-headline-small-line-height); color: var(--color-on-surface-variant); transition: transform var(--motion-page) var(--ease-standard); }
 .moment-who { font-family: var(--font-family-mono); font-size: var(--type-mono-label-size); line-height: var(--type-mono-label-line-height); font-weight: var(--font-weight-bold); text-transform: uppercase; color: var(--color-on-surface-variant); }
-.moment h3 { margin-top: var(--space-4); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); text-wrap: balance; transition: transform var(--motion-page) var(--ease-standard); }
+.moment h3 { margin-top: var(--space-4); font-weight: var(--page-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); text-wrap: balance; transition: transform var(--motion-page) var(--ease-standard); }
 .moment p { grid-column: 2; color: var(--color-on-surface-variant); max-width: 40rem; text-wrap: pretty; }
 @media (hover: hover) {
   .moment:hover::before { transform: translateY(0); }
@@ -876,7 +1023,7 @@ html.menu-open { overflow: hidden; }
 /* =====================================================================
    12. WHAT KMITO CANNOT STOP
    ===================================================================== */
-.cannot-quote { font-weight: var(--type-app-screen-title-weight); font-size: var(--page-type-quote); line-height: 1.02; letter-spacing: var(--page-tracking-tight); margin-top: var(--space-24); }
+.cannot-quote { font-weight: var(--page-title-weight); font-size: var(--page-type-quote); line-height: 1.02; letter-spacing: var(--page-tracking-tight); margin-top: var(--space-24); }
 .cannot-quote span { display: block; text-wrap: balance; }
 .cannot-quote .q2 { color: var(--color-on-surface-variant); margin-top: var(--space-12); }
 .motion .cannot-quote .q1 { opacity: calc(0.25 + min(1, var(--p, 1) * 1.6) * 0.75); }
@@ -889,7 +1036,7 @@ html.menu-open { overflow: hidden; }
 .facts dd { margin: 0; font-weight: var(--font-weight-bold); text-align: end; }
 .facts .spark-text { color: var(--color-accent-volt); }
 .cannot-note p + p { margin-top: var(--space-16); }
-.cannot-note .nudge { font-weight: var(--type-app-screen-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
+.cannot-note .nudge { font-weight: var(--page-title-weight); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); letter-spacing: var(--type-app-screen-title-tracking); }
 .cannot-note .kmito { display: flex; gap: var(--space-12); font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: var(--type-mono-title-size); line-height: var(--type-mono-title-line-height); }
 .cannot-note .kmito .spark { color: var(--color-on-surface-variant); }
 @media (min-width: 900px) { .cannot-grid { grid-template-columns: 1fr 1fr; } }
@@ -917,7 +1064,7 @@ html.menu-open { overflow: hidden; }
    14. CALL TO ACTION AND FOOTER
    ===================================================================== */
 .cta { text-align: center; }
-.cta-line { font-weight: var(--type-app-screen-title-weight); font-size: var(--page-type-hero); line-height: var(--page-type-hero-line); letter-spacing: var(--page-tracking-hero); text-wrap: balance; }
+.cta-line { font-weight: var(--page-title-weight); font-size: var(--page-type-hero); line-height: var(--page-type-hero-line); letter-spacing: var(--page-tracking-hero); text-wrap: balance; }
 .motion .cta-line { transform: scale(calc(0.92 + var(--p, 1) * 0.08)); opacity: calc(0.3 + var(--p, 1) * 0.7); }
 .cta .lead { margin: var(--space-24) auto 0; }
 .cta-actions { margin-top: var(--space-40); display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
@@ -962,11 +1109,12 @@ html.menu-open { overflow: hidden; }
     <div class="island-bar">
       <a class="brand" href="#top" aria-label="Kmito, back to top">
         <svg class="orbit" viewBox="0 0 512 512" aria-hidden="true"><g class="orbit-arcs"><path data-logo="arcs" d="M291.24,59.13A200,200 0 0,1 442.34,183.34A73.27,73.27 0 0,0 396.1,192.63A153.77,153.77 0 0,0 286.86,105.36A40.51,40.51 0 0,0 291.24,59.13Z M442.34,328.66A200,200 0 0,1 291.24,452.87A40.51,40.51 0 0,0 286.86,406.64A153.77,153.77 0 0,0 396.1,319.37A73.27,73.27 0 0,0 442.34,328.66Z M220.76,452.87A200,200 0 0,1 69.66,328.66A73.27,73.27 0 0,0 115.9,319.37A153.77,153.77 0 0,0 225.14,406.64A40.51,40.51 0 0,0 220.76,452.87Z M69.66,183.34A200,200 0 0,1 220.76,59.13A40.51,40.51 0 0,0 225.14,105.36A153.77,153.77 0 0,0 115.9,192.63A73.27,73.27 0 0,0 69.66,183.34Z"/></g><g class="orbit-dots"><path data-logo="dots" d="M38.61,256A40.51,40.51 0 1,1 119.63,256A40.51,40.51 0 1,1 38.61,256Z M392.37,256A40.51,40.51 0 1,1 473.39,256A40.51,40.51 0 1,1 392.37,256Z"/></g><path class="orbit-core" data-logo="core" fill-rule="evenodd" d="M169.48,256A86.52,86.52 0 1,1 342.52,256A86.52,86.52 0 1,1 169.48,256Z M215.26,256A40.74,40.74 0 1,0 296.74,256A40.74,40.74 0 1,0 215.26,256Z"/></svg>
-        <span class="brand-word">Kmito</span>
+        <span class="brand-word"><svg class="wordmark" viewBox="0 0 74.07 21" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M0 0L3 0L3 6.41L4.2 6.41C7.74 6.41 10.61 3.54 10.61 0L13.61 0C13.61 3.32 11.86 6.4 9 8.09L9 9.41C9 13.91 12.64 17.55 17.14 17.55L17.14 20.55C10.99 20.55 6 15.56 6 9.41L3 9.41L3 20.55L0 20.55L0 0ZM19.54 20.55L19.54 11.53C19.54 9.37 20.85 7.43 22.85 6.62C24.84 5.81 27.14 6.29 28.64 7.84C30.14 6.29 32.44 5.81 34.43 6.62C36.43 7.43 37.74 9.37 37.74 11.53L37.74 20.55L34.74 20.55L34.74 11.53C34.74 10.26 33.71 9.23 32.44 9.23C31.17 9.23 30.14 10.26 30.14 11.53L30.14 20.55L27.14 20.55L27.14 11.53C27.14 10.26 26.11 9.23 24.84 9.23C23.57 9.23 22.54 10.26 22.54 11.53L22.54 20.55L19.54 20.55ZM43.92 6.42L43.92 20.56L40.94 20.56L40.94 6.42L43.92 6.42ZM42.49 0.42C43.04 0.42 43.52 0.62 43.9 1.01L43.91 1.02C43.91 1.02 43.91 1.02 43.92 1.03L43.92 1.03C44.31 1.41 44.51 1.89 44.51 2.44C44.51 2.99 44.3 3.48 43.91 3.87C43.52 4.26 43.04 4.46 42.49 4.46C42.01 4.46 41.57 4.31 41.21 4.01L41.06 3.88L41.04 3.87C40.66 3.47 40.47 2.99 40.47 2.44C40.47 1.89 40.67 1.41 41.05 1.02C41.45 0.62 41.93 0.42 42.49 0.42ZM49.06 0L52.06 0L52.06 6.41L57.06 6.41L57.06 9.41L52.06 9.41L52.06 13.48C52.06 15.73 53.88 17.55 56.13 17.55L58.61 17.55L58.61 20.55L56.13 20.55C52.22 20.55 49.06 17.39 49.06 13.48L49.06 9.41L46.56 9.41L46.56 6.41L49.06 6.41L49.06 0ZM66.81 6.23C68.14 6.23 69.36 6.56 70.47 7.21C71.42 7.79 72.22 8.53 72.83 9.45L73.09 9.85L73.32 10.28C73.82 11.26 74.07 12.34 74.07 13.49C74.07 14.83 73.75 16.05 73.09 17.15C72.44 18.24 71.56 19.12 70.47 19.77C69.37 20.43 68.14 20.75 66.81 20.75C65.48 20.75 64.26 20.43 63.15 19.77C62.06 19.12 61.19 18.24 60.53 17.15C59.88 16.05 59.55 14.83 59.55 13.49C59.55 12.17 59.88 10.95 60.53 9.85L60.79 9.45C61.41 8.53 62.2 7.79 63.15 7.21C64.26 6.56 65.48 6.23 66.81 6.23ZM66.81 9.21C66.02 9.21 65.31 9.4 64.66 9.79C64.01 10.17 63.49 10.69 63.11 11.35L63.1 11.37L63.09 11.38C62.72 12.01 62.53 12.71 62.53 13.49C62.53 14.28 62.72 15 63.1 15.65L63.1 15.65C63.49 16.3 64.01 16.81 64.66 17.2L64.66 17.2C65.31 17.58 66.02 17.77 66.81 17.77C67.59 17.77 68.29 17.58 68.93 17.21L68.94 17.21L68.95 17.2C69.61 16.81 70.13 16.29 70.52 15.65L70.52 15.65C70.9 15 71.09 14.28 71.09 13.49C71.09 12.71 70.9 12.01 70.53 11.38L70.53 11.37L70.52 11.35L70.36 11.11C70 10.57 69.53 10.13 68.95 9.79L68.94 9.78L68.93 9.78C68.3 9.4 67.59 9.21 66.81 9.21Z"/></svg></span>
       </a>
       <nav class="nav" aria-label="Sections">
         <span class="nav-pill" aria-hidden="true"></span>
         <a href="#how" data-nav>How it works</a>
+        <a href="#packs" data-nav>Packs</a>
         <a href="#screens" data-nav>Screens</a>
         <a href="#deal" data-nav>The Deal</a>
       </nav>
@@ -991,11 +1139,12 @@ html.menu-open { overflow: hidden; }
         <nav aria-label="Sections">
           <ol class="menu-list">
             <li style="--i:0"><a href="#how" data-nav><span class="num">01</span><span class="menu-name">How it works</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
-            <li style="--i:1"><a href="#screens" data-nav><span class="num">02</span><span class="menu-name">Screens</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
-            <li style="--i:2"><a href="#deal" data-nav><span class="num">03</span><span class="menu-name">The Deal</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
-            <li style="--i:3"><a href="#moments" data-nav><span class="num">04</span><span class="menu-name">Moments</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
-            <li style="--i:4"><a href="#cannot" data-nav><span class="num">05</span><span class="menu-name">Limits</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
-            <li style="--i:5"><a href="#privacy" data-nav><span class="num">06</span><span class="menu-name">Privacy</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:1"><a href="#packs" data-nav><span class="num">02</span><span class="menu-name">Packs</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:2"><a href="#screens" data-nav><span class="num">03</span><span class="menu-name">Screens</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:3"><a href="#deal" data-nav><span class="num">04</span><span class="menu-name">The Deal</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:4"><a href="#moments" data-nav><span class="num">05</span><span class="menu-name">Moments</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:5"><a href="#cannot" data-nav><span class="num">06</span><span class="menu-name">Limits</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
+            <li style="--i:6"><a href="#privacy" data-nav><span class="num">07</span><span class="menu-name">Privacy</span><span class="menu-lead" aria-hidden="true"></span><span class="menu-hole" aria-hidden="true"></span></a></li>
           </ol>
         </nav>
         <div class="menu-foot">
@@ -1141,6 +1290,156 @@ html.menu-open { overflow: hidden; }
       </ol>
     </div>
   </div>
+</section>
+
+<!-- PACKS: pick what it asks -->
+<section class="section packs" id="packs" aria-labelledby="packs-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="overline">Packs</p>
+      <h2 class="h2" id="packs-title">You pick what it asks.</h2>
+      <p class="lead">Turn packs on and off. The question on the card comes only from the packs that are on.</p>
+    </div>
+    <div class="mix" data-mix>
+      <div class="rack-wrap">
+        <div class="rack reveal" role="group" aria-label="Packs. Pressed packs are on.">
+        <button class="tile" type="button" aria-pressed="true" data-pack="dyk" data-count="100" aria-label="Did you know?" style="--i:0">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Did you know?</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>100 q</span><span>Choices · marker</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="true" data-pack="lateral" data-count="104" aria-label="Lateral Logic &amp; Game Theory" style="--i:1">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Lateral Logic</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>104 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="iq" data-count="103" aria-label="IQ 140+ Pattern &amp; Matrix Challenge" style="--i:2">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">IQ 140+</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>103 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="true" data-pack="chess" data-count="105" aria-label="Grandmaster Chess Endgames &amp; Tactics" style="--i:3">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Grandmaster Chess</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>105 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="quant" data-count="106" aria-label="Quant Trader Speed Mental Math" style="--i:4">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Quant Mental Math</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>106 q</span><span>Numpad</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="tech" data-count="103" aria-label="Big Tech Systems &amp; Algorithmic Mastery" style="--i:5">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Big Tech Algorithms</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>103 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="design" data-count="100" aria-label="Design for Middle+: UI, UX, Composition &amp; Typography" style="--i:6">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Design Middle+</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>100 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="type" data-count="100" aria-label="Modern &amp; Historical Typography (Middle+)" style="--i:7">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">Typography Middle+</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>100 q</span><span>Choices</span></span>
+        </button>
+        <button class="tile" type="button" aria-pressed="false" data-pack="english" data-count="100" aria-label="English B2 Grammar &amp; Vocab (Українською)" style="--i:8">
+          <span class="tile-top"><span class="tile-name" aria-hidden="true">English B2</span><span class="tile-hole" aria-hidden="true"></span></span>
+          <span class="tile-meta" aria-hidden="true"><span>100 q</span><span>Fill the gap</span></span>
+        </button>
+        </div>
+        <p class="rack-count" aria-live="polite" data-mix-count></p>
+        <p class="rack-note">Each pack answers in its own way: a tap, a typed number, a marker on a line, a word for the gap.</p>
+      </div>
+      <div class="card ask mix-card" role="group" aria-label="A question from the packs that are on">
+        <div class="ask-top">
+          <span data-mix-pack></span><span class="grow" aria-hidden="true"></span>
+          <span data-mix-level></span>
+        </div>
+        <div class="kmito-says">
+          <span class="spark" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <p class="kmito-line" data-mix-line aria-live="polite"
+             data-deal="One question from {pack}"
+             data-wrong="Not this one. No cost. Look again."
+             data-right="Right. Ten minutes, made by you."
+             data-last="One pack stays on. I need something to ask."
+             data-left="Not this one either. Try the next card."></p>
+        </div>
+        <div class="mix-stage" data-mix-stage></div>
+        <div class="mix-actions">
+          <button class="btn btn--outline" type="button" data-mix-next>
+            <span class="btn__text">Another one</span>
+            <span class="btn__wipe" aria-hidden="true"><span class="btn__wipe-text"></span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="kids" data-kids role="region" aria-labelledby="kids-title">
+      <div class="kids-head">
+        <h3 class="kids-title" id="kids-title">Packs for your children too.</h3>
+        <p class="kids-lead">Eleven packs are written for younger readers: nine for ages 7–9 and two for ages 10–13. You turn them on like any other pack. Pick one to see how it asks.</p>
+      </div>
+      <div class="mix">
+        <div class="rack-wrap">
+          <div class="age-switch" role="group" aria-label="Age group">
+            <button class="chip age-btn" type="button" aria-pressed="true" data-age-btn="7-9">Ages 7–9</button>
+            <button class="chip age-btn" type="button" aria-pressed="false" data-age-btn="10-13">Ages 10–13</button>
+          </div>
+          <div class="rack kids-rack reveal" role="group" aria-label="Packs for ages 7–9 and 10–13. Pick one to see a sample question.">
+          <button class="tile" type="button" aria-pressed="false" data-pack="times" data-age="7-9" aria-label="Times Tables 1–10, ages 7–9, 100 questions" style="--i:0">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Times Tables 1–10</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="scholars" data-age="7-9" aria-label="Junior Scholars (7–9 yrs): Fun Math &amp; Brain Riddles, ages 7–9, 100 questions" style="--i:1">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Junior Scholars: Fun Math &amp; Brain Riddles</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="science" data-age="7-9" aria-label="Junior Scientists (7–9 yrs): Nature, Space &amp; Matter, ages 7–9, 100 questions" style="--i:2">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Junior Scientists: Nature, Space &amp; Matter</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="jchess" data-age="7-9" aria-label="Junior Chess, Word Heroes &amp; Kid Coding (7–9 yrs), ages 7–9, 100 questions" style="--i:3">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Junior Chess, Word Heroes &amp; Kid Coding</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="logic" data-age="7-9" aria-label="Logic Tasks (7–9), ages 7–9, 100 questions" style="--i:4">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Logic Tasks</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="readua" data-age="7-9" aria-label="Reading in Ukrainian (7–9), ages 7–9, 100 questions, in Ukrainian" style="--i:5">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Reading in Ukrainian</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 7–9</span><span>100 q</span><span>In Ukrainian</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="tweens" data-age="10-13" aria-label="Tweens &amp; Middle School (10–13 yrs): Smart STEM &amp; Logic, ages 10–13, 100 questions" style="--i:6">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Tweens &amp; Middle School: Smart STEM &amp; Logic</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 10–13</span><span>100 q</span></span>
+          </button>
+          <button class="tile" type="button" aria-pressed="false" data-pack="mathe" data-age="10-13" aria-label="Mathe Klasse 3–6 (Deutsch), ages 10–13, 100 questions, in German" style="--i:7">
+            <span class="tile-top"><span class="tile-name" aria-hidden="true">Mathe Klasse 3–6</span><span class="tile-hole" aria-hidden="true"></span></span>
+            <span class="tile-meta" aria-hidden="true"><span>Ages 10–13</span><span>100 q</span><span>In German</span></span>
+          </button>
+          </div>
+          <p class="rack-count" aria-live="polite" data-mix-count></p>
+        </div>
+        <div class="card ask mix-card" role="group" aria-label="A sample question from the pack you picked">
+          <div class="ask-top">
+            <span data-mix-pack></span><span class="grow" aria-hidden="true"></span>
+            <span data-mix-level></span>
+          </div>
+          <div class="kmito-says">
+            <span class="spark" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+            <p class="kmito-line" data-mix-line aria-live="polite"
+               data-deal="A sample from {pack}"
+               data-lang="The pack is in {lang}."
+               data-wrong="Not this one. Look again."
+               data-right="Right. Every card explains its answer, like this one."></p>
+          </div>
+          <div class="mix-stage" data-mix-stage></div>
+          <div class="mix-actions">
+            <button class="btn btn--outline" type="button" data-mix-next>
+              <span class="btn__text">Another sample</span>
+              <span class="btn__wipe" aria-hidden="true"><span class="btn__wipe-text"></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="application/json" id="kids-data">{"ages": {"7-9": {"packs": 9, "questions": 900}, "10-13": {"packs": 2, "questions": 200}}, "packs": [{"key": "times", "title": "Times Tables 1–10", "short": "Times Tables 1–10", "age": "7-9", "count": 100}, {"key": "scholars", "title": "Junior Scholars (7–9 yrs): Fun Math & Brain Riddles", "short": "Junior Scholars: Fun Math & Brain Riddles", "age": "7-9", "count": 100}, {"key": "science", "title": "Junior Scientists (7–9 yrs): Nature, Space & Matter", "short": "Junior Scientists: Nature, Space & Matter", "age": "7-9", "count": 100}, {"key": "jchess", "title": "Junior Chess, Word Heroes & Kid Coding (7–9 yrs)", "short": "Junior Chess, Word Heroes & Kid Coding", "age": "7-9", "count": 100}, {"key": "logic", "title": "Logic Tasks (7–9)", "short": "Logic Tasks", "age": "7-9", "count": 100}, {"key": "readua", "title": "Reading in Ukrainian (7–9)", "short": "Reading in Ukrainian", "age": "7-9", "count": 100, "lang": "uk"}, {"key": "tweens", "title": "Tweens & Middle School (10–13 yrs): Smart STEM & Logic", "short": "Tweens & Middle School: Smart STEM & Logic", "age": "10-13", "count": 100}, {"key": "mathe", "title": "Mathe Klasse 3–6 (Deutsch)", "short": "Mathe Klasse 3–⁠6", "age": "10-13", "count": 100, "lang": "de"}], "cards": [{"pack": "times", "q": "What is 4 × 6?", "opts": ["20", "23", "10", "24"], "correct": 3, "level": "Hard", "why": "Double twice: 6 → 12 → 24.", "form": "numpad", "num": "24"}, {"pack": "times", "q": "What is 5 × 6?", "opts": ["11", "40", "30", "31"], "correct": 2, "level": "Medium", "why": "Half of 6 × 10: 60 ÷ 2 = 30.", "form": "numpad", "num": "30"}, {"pack": "scholars", "q": "A movie starts at 4:15 PM and ends at 4:50 PM. How many minutes long was the movie?", "opts": ["30 min", "35 min", "40 min", "45 min"], "correct": 1, "level": "Medium", "why": "50 - 15 = 35 minutes.", "form": "choices"}, {"pack": "scholars", "q": "20 apples are packed into bags of 5. How many bags are filled?", "opts": ["4", "5", "15", "25"], "correct": 0, "level": "Easy", "why": "20 ÷ 5 = 4, because 4 × 5 = 20. So 4 bags are filled.", "form": "choices"}, {"pack": "science", "q": "What is the green pigment in plant leaves that absorbs sunlight for photosynthesis?", "opts": ["Hemoglobin", "Chlorophyll", "Melanin", "Carotene"], "correct": 1, "level": "Hard", "why": "Chlorophyll absorbs red and blue light from the Sun and gives leaves their green color.", "form": "choices"}, {"pack": "science", "q": "Which planet is nicknamed the 'Red Planet' because of its rusty iron-rich soil?", "opts": ["Venus", "Jupiter", "Mars", "Saturn"], "correct": 2, "level": "Medium", "why": "Mars has abundant iron oxide (rust) on its surface, giving it a distinct reddish appearance.", "form": "choices"}, {"pack": "jchess", "q": "You capture a Queen, but you lose a Rook and a Bishop for it. Who won more points?", "opts": ["Your opponent, by 1 point", "Nobody, it is equal", "Your opponent, by 2 points", "You, by 1 point"], "correct": 3, "level": "Hard", "why": "A Queen is worth 9 points. A Rook and a Bishop are worth 5 + 3 = 8 points. You won 9 and lost 8, so you are 1 point ahead.", "form": "choices"}, {"pack": "jchess", "q": "A robot starts facing East. Which command turns it to face North?", "opts": ["Turn Left 90°", "Turn Right 90°", "Turn Around 180°", "Move Forward 1 step"], "correct": 0, "level": "Medium", "why": "Facing East (right), turning counter-clockwise (Left 90°) points directly to North (up).", "form": "choices"}, {"pack": "logic", "q": "A rooster sits on the top of a roof and lays an egg. Which way does the egg roll?", "opts": ["Straight down", "To the left", "To the right", "Roosters do not lay eggs"], "correct": 3, "level": "Easy", "why": "Only hens lay eggs. A rooster cannot lay one, so no egg rolls anywhere.", "form": "choices"}, {"pack": "logic", "q": "Each shape is a number. ★ + ★ = 12. ★ + ● = 10. What number is ●?", "opts": ["5", "6", "4", "2"], "correct": 2, "level": "Medium", "why": "★ + ★ = 12, so ★ = 6. Then 6 + ● = 10, so ● = 4.", "form": "choices"}, {"pack": "readua", "q": "Яке слово підходить? Корова дає ___.", "opts": ["вовну", "яйця", "мед", "молоко"], "correct": 3, "level": "Easy", "why": "Корова дає молоко. Мед дають бджоли, яйця — кури, а вовну — вівці.", "form": "choices", "lang": "uk"}, {"pack": "readua", "q": "Яке слово римується зі словом «кіт»?", "opts": ["кішка", "миша", "пліт", "лапа"], "correct": 2, "level": "Easy", "why": "Кіт — пліт: слова закінчуються однаково, на «-іт».", "form": "choices", "lang": "uk"}, {"pack": "tweens", "q": "What is the median of the numbers 5, 1, 9, 3 and 12?", "opts": ["5", "6", "9", "11"], "correct": 0, "level": "Medium", "why": "Put the numbers in order: 1, 3, 5, 9, 12. The median is the middle one, which is 5. (6 is the mean.)", "form": "choices"}, {"pack": "tweens", "q": "In Python, what does 'Kmito'[0:4] evaluate to?", "opts": ["'Kmito'", "'Kmit'", "'Km'", "'mito'"], "correct": 1, "level": "Medium", "why": "Slice [0:4] takes characters at indices 0, 1, 2, and 3: 'K', 'm', 'i', 't'.", "form": "choices"}, {"pack": "mathe", "q": "Wie viel ist 9 · 7?", "opts": ["63", "54", "61", "62"], "correct": 0, "level": "Easy", "why": "9 · 7 = 63. Das ist 7-mal die 9.", "form": "numpad", "num": "63", "lang": "de"}, {"pack": "mathe", "q": "Wie viele Zentimeter sind 1 m 78 cm?", "opts": ["268", "178", "78", "188"], "correct": 1, "level": "Medium", "why": "1 m = 100 cm, dazu 78 cm: 178 cm.", "form": "numpad", "num": "178", "lang": "de"}]}</script>
+    <p class="packs-foot">All <span class="num">28</span> packs and <span class="num">2,853</span> questions are inside the app. No network needed. <a class="link" href="#get" data-store-link>Get Kmito</a></p>
+  </div>
+  <script type="application/json" id="packs-data">{"packs": [{"key": "dyk", "title": "Did you know?", "short": "Did you know?", "kind": "Choices · marker", "count": 100}, {"key": "lateral", "title": "Lateral Logic & Game Theory", "short": "Lateral Logic", "kind": "Choices", "count": 104}, {"key": "iq", "title": "IQ 140+ Pattern & Matrix Challenge", "short": "IQ 140+", "kind": "Choices", "count": 103}, {"key": "chess", "title": "Grandmaster Chess Endgames & Tactics", "short": "Grandmaster Chess", "kind": "Choices", "count": 105}, {"key": "quant", "title": "Quant Trader Speed Mental Math", "short": "Quant Mental Math", "kind": "Numpad", "count": 106}, {"key": "tech", "title": "Big Tech Systems & Algorithmic Mastery", "short": "Big Tech Algorithms", "kind": "Choices", "count": 103}, {"key": "design", "title": "Design for Middle+: UI, UX, Composition & Typography", "short": "Design Middle+", "kind": "Choices", "count": 100}, {"key": "type", "title": "Modern & Historical Typography (Middle+)", "short": "Typography Middle+", "kind": "Choices", "count": 100}, {"key": "english", "title": "English B2 Grammar & Vocab (Українською)", "short": "English B2", "kind": "Fill the gap", "count": 100}], "cards": [{"pack": "dyk", "q": "Three of these are true. I made one up. Which one?", "opts": ["A hummingbird can fly backwards", "An ostrich hides its head in the sand", "A cow's stomach has four parts", "Sea otters wrap up in seaweed to sleep"], "correct": 1, "level": "Easy", "why": "An ostrich lays its neck flat on the ground to hide, and it turns its eggs in a nest dug in the sand. From far away the head seems gone. The other three are true.", "form": "choices"}, {"pack": "dyk", "q": "About how far away is the Moon?", "opts": ["40,000 km", "400,000 km", "4,000 km", "4,000,000 km"], "correct": 1, "level": "Medium", "why": "The Moon is about 384,000 km away. Light needs a little over one second for the trip.", "form": "marker", "pos": [0.375, 0.625, 0.125, 0.875]}, {"pack": "dyk", "q": "About how many times does a heart beat in one day?", "opts": ["100,000 times", "10,000 times", "1,000 times", "1,000,000 times"], "correct": 0, "level": "Easy", "why": "About 70 beats a minute for 1,440 minutes is close to 100,000. The heart never takes a day off.", "form": "marker", "pos": [0.625, 0.375, 0.125, 0.875]}, {"pack": "lateral", "q": "A chess knight stands on a white square and makes exactly 7 moves. What color is the square it ends on?", "opts": ["Always white", "It depends on the route", "Always black", "It depends on the starting square"], "correct": 2, "level": "Easy", "why": "Every knight move changes the color of the square. After an odd number of moves the knight is on the opposite color, so after 7 moves it is on black.", "form": "choices"}, {"pack": "lateral", "q": "You are running a race and overtake the runner in second place. What place are you in now?", "opts": ["First place", "Second place", "Third place", "Last place"], "correct": 1, "level": "Easy", "why": "You take the place of the runner you passed, so you are now second. To be first, you would have to pass the leader.", "form": "choices"}, {"pack": "lateral", "q": "A fair coin has landed heads 5 times in a row. What is the probability that the next toss is heads?", "opts": ["1/64", "1/32", "1/2", "5/6"], "correct": 2, "level": "Easy", "why": "Coin tosses are independent, so the next toss is still 1/2. Expecting tails to be 'due' is the gambler's fallacy; 1/64 is the chance of six heads in a row before any toss is made.", "form": "choices"}, {"pack": "iq", "q": "If all Zorks are Flips, and no Flips are Glims, which conclusion MUST be true?", "opts": ["Some Glims are Zorks", "All Glims are Flips", "No Zorks are Glims", "All Zorks are Glims"], "correct": 2, "level": "Medium", "why": "Since the set of Zorks is entirely inside Flips, and Flips has zero intersection with Glims, Zorks has zero intersection with Glims.", "form": "choices"}, {"pack": "iq", "q": "What is the angle between the hour hand and minute hand of a clock at exactly 3:15?", "opts": ["7.5°", "0°", "15°", "5°"], "correct": 0, "level": "Medium", "why": "At 3:15, the minute hand is at 90°. The hour hand has moved 15 min × 0.5°/min = 7.5° past 90°. The angle is 7.5°.", "form": "choices"}, {"pack": "iq", "q": "3, 5, 9, 15, 23, 33, ... What comes next?", "opts": ["43", "45", "47", "49"], "correct": 1, "level": "Medium", "why": "Differences are +2, +4, +6, +8, +10. Next difference is +12 => 33 + 12 = 45.", "form": "choices"}, {"pack": "chess", "q": "Which tactic is it when a single piece attacks two or more enemy pieces at the same time?", "opts": ["Pin", "Skewer", "Decoy", "Fork"], "correct": 3, "level": "Easy", "why": "A fork is a double attack by one piece; the opponent can usually save only one of the attacked pieces. Knights are famous for it.", "form": "choices"}, {"pack": "chess", "q": "A Rook checks the enemy King; the King steps aside and the Rook captures the Queen that stood behind it on the same line. What is this tactic called?", "opts": ["Skewer", "Pin", "Fork", "Windmill"], "correct": 0, "level": "Easy", "why": "In a skewer the more valuable piece is in front: it must move away and the piece behind it is lost. In a pin it is the other way round.", "form": "choices"}, {"pack": "chess", "q": "Which of these can never checkmate a lone King, even if the defender plays the worst possible moves?", "opts": ["King and rook", "King and knight", "King and queen", "King and pawn"], "correct": 1, "level": "Easy", "why": "King and one knight (or one bishop) cannot build any mating position, so the game is drawn at once. A pawn can still promote.", "form": "choices"}, {"pack": "quant", "q": "Two fair 6-sided dice are rolled. How many of the 36 outcomes sum to exactly 7?", "opts": ["5", "6", "7", "8"], "correct": 1, "level": "Medium", "why": "The pairs summing to 7 are (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) — exactly 6 outcomes.", "form": "numpad", "num": "6"}, {"pack": "quant", "q": "A stock rises from $80 to $100. What is the percentage gain?", "opts": ["20%", "25%", "30%", "80%"], "correct": 1, "level": "Easy", "why": "The gain is $20 on a base of $80: 20 / 80 = 0.25 = 25%. Dividing by 100 instead gives the tempting 20%.", "form": "numpad", "num": "25"}, {"pack": "quant", "q": "What is 125 × 32 computed mentally without a calculator?", "opts": ["3800", "3900", "4000", "4200"], "correct": 2, "level": "Hard", "why": "125 = 1000 / 8. 32 / 8 = 4, so 4 × 1000 = 4000.", "form": "numpad", "num": "4000"}, {"pack": "tech", "q": "Which data structure removes elements in the same order in which they were added (FIFO)?", "opts": ["Stack", "Heap", "Queue", "Hash set"], "correct": 2, "level": "Easy", "why": "A queue is First-In, First-Out: elements leave from the front in the order they joined at the back. A stack is the opposite (LIFO).", "form": "choices"}, {"pack": "tech", "q": "Which HTTP method is meant to read a resource without changing any state on the server?", "opts": ["POST", "PUT", "PATCH", "GET"], "correct": 3, "level": "Easy", "why": "GET is defined as a safe method: it only retrieves a representation. POST, PUT and PATCH create or modify data.", "form": "choices"}, {"pack": "tech", "q": "What type of error can a standard Bloom Filter produce?", "opts": ["False Negatives only", "False Positives only", "Both False Positives and False Negatives", "Zero errors ever"], "correct": 1, "level": "Easy", "why": "A Bloom filter guarantees no false negatives: if it says 'not present', it is definitely not. But hash collisions can yield false positives.", "form": "choices"}, {"pack": "design", "q": "Why should inline email validation never fire a red error on the very first typed character before field blur?", "opts": ["Regex checks saturate mobile CPUs", "Red text hides native carets", "Blur listeners skip autofill", "Early warnings feel punitive"], "correct": 3, "level": "Medium", "why": "Premature validation interrupts typing flow and flags incomplete input as broken; reward early on valid completion, warn late on blur.", "form": "choices"}, {"pack": "design", "q": "Why do UI motion specs animate transform and opacity instead of height or margin-top for smooth 60–120 fps cards?", "opts": ["Both stay on GPU compositor", "Transform lowers network payloads", "Margin triggers WebGL shaders", "Opacity disables subpixel AA"], "correct": 0, "level": "Medium", "why": "Animating transform and opacity bypasses main-thread Layout and Paint passes, keeping frames locked on the GPU compositor.", "form": "choices"}, {"pack": "design", "q": "Under WCAG 2.2 SC 1.4.11, what minimum contrast ratio must unfocused text-input borders and toggle tracks meet?", "opts": ["1.5 : 1", "3.0 : 1", "4.5 : 1", "7.0 : 1"], "correct": 1, "level": "Medium", "why": "Non-text contrast under SC 1.4.11 requires at least 3.0 : 1 between active UI boundaries and adjacent surface tones.", "form": "choices"}, {"pack": "type", "q": "Which variable font axis adjusts apparent stroke weight without changing glyph advance widths or causing text reflow?", "opts": ["wght (Weight)", "wdth (Width)", "GRAD (Grade)", "opsz (Optical Size)"], "correct": 2, "level": "Hard", "why": "Grade (GRAD) thickens or thins strokes internally while preserving horizontal metrics, preventing layout shifts on hover or in dark mode.", "form": "choices"}, {"pack": "type", "q": "How does CSS 'text-wrap: balance' differ from 'text-wrap: pretty' in modern web typography?", "opts": ["pretty centers text; balance justifies it", "balance evens titles; pretty guards tail", "balance runs only on body paragraphs", "pretty disables hyphenation across all lines"], "correct": 1, "level": "Medium", "why": "Balance equalizes line lengths in short blocks (typically up to 6–10 lines) like headings, while pretty optimizes full paragraphs to prevent trailing single-word lines.", "form": "choices"}, {"pack": "type", "q": "What does CSS 'font-size-adjust: 0.52' normalize when switching from a web font to a system fallback?", "opts": ["Lowercase x-height across font families", "Letter-spacing in uppercase buttons", "Ascender height above capital glyphs", "Line-height in multi-column grids"], "correct": 0, "level": "Medium", "why": "Setting font-size-adjust scales the fallback font so its ex-to-em ratio (aspect value) matches the primary font, keeping perceived size steady.", "form": "choices"}, {"pack": "english", "q": "If I ___ you, I would accept that offer.", "opts": ["were", "would be", "had been", "am"], "correct": 0, "level": "Easy", "form": "gap", "prompt": "Якби я був на твоєму місці, я б прийняв цю пропозицію"}, {"pack": "english", "q": "They decided to ___ the concert because of the storm.", "opts": ["call off", "put off", "turn down", "bring up"], "correct": 0, "level": "Easy", "form": "gap", "prompt": "Вони вирішили скасувати концерт через шторм"}, {"pack": "english", "q": "We have ___ coffee, so we need to buy some more.", "opts": ["run out of", "come up with", "put up with", "looked into"], "correct": 0, "level": "Easy", "form": "gap", "prompt": "У нас закінчилася кава, тож треба купити ще"}]}</script>
 </section>
 
 <!-- SCREENSHOTS -->
@@ -1516,11 +1815,377 @@ html.menu-open { overflow: hidden; }
     options[0].focus();
   });
 
+  /* ---------- packs: switch packs on and off, answer a card from the mix ----------
+     The cards are real questions copied from app/src/main/assets/packs/<pack>/en.json.
+     The rule of the app holds: at least one pack is always on. */
+  const LANG_NAMES = { uk: 'Ukrainian', de: 'German' };
+  // One engine, two decks: the adult mixer, and the sample cards of the packs written for children
+  const makeDeck = (mixEl, mixData, kids) => {
+  const mixPacks = Object.fromEntries(mixData.packs.map(p => [p.key, p]));
+  const mixCards = mixData.cards.map((c, i) => Object.assign({ i }, c));
+  const tiles = [...mixEl.querySelectorAll('.tile')];
+  const mixCount = mixEl.querySelector('[data-mix-count]');
+  const mixLine = mixEl.querySelector('[data-mix-line]');
+  const mixPackLabel = mixEl.querySelector('[data-mix-pack]');
+  const mixLevel = mixEl.querySelector('[data-mix-level]');
+  const mixStage = mixEl.querySelector('[data-mix-stage]');
+  const mixNext = mixEl.querySelector('[data-mix-next]');
+  const fmt = n => n.toLocaleString('en');
+  const isOn = t => t.getAttribute('aria-pressed') === 'true';
+  const onKeys = () => tiles.filter(isOn).map(t => t.dataset.pack);
+  const seen = new Set();
+  let mixCard = null, mixTimers = [];
+
+  const mixSay = text => {
+    if (!motion) { mixLine.textContent = text; return; }
+    mixLine.classList.add('is-out');
+    mixTimers.push(setTimeout(() => { mixLine.textContent = text; mixLine.classList.remove('is-out'); }, 180));
+  };
+  const writeCount = () => {
+    const on = tiles.filter(isOn);
+    const q = on.reduce((sum, t) => sum + Number(t.dataset.count), 0);
+    mixCount.innerHTML = `<strong>${on.length}</strong> ${on.length === 1 ? 'pack' : 'packs'} on · <strong>${fmt(q)}</strong> questions`;
+  };
+
+  // The next card: from one pack, or from the mix; no repeats until the set is used up
+  const pick = keys => {
+    let pool = mixCards.filter(c => keys.includes(c.pack) && !seen.has(c.i) && c !== mixCard);
+    if (!pool.length) {
+      mixCards.forEach(c => { if (keys.includes(c.pack)) seen.delete(c.i); });
+      pool = mixCards.filter(c => keys.includes(c.pack) && c !== mixCard);
+    }
+    if (!pool.length) pool = mixCards.filter(c => keys.includes(c.pack));
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+
+  // ----- building one card (also used, hidden, to measure the tallest card) -----
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const optionButton = (text, k) => {
+    const b = el('button', 'opt'); b.type = 'button';
+    b.append(el('span', 'opt-letter', 'ABCD'[k]), el('span', 'opt-text', text));
+    b.firstChild.setAttribute('aria-hidden', 'true');
+    const x = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); x.setAttribute('class', 'opt-x'); x.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use'); use.setAttribute('href', '#i-x'); x.append(use); b.append(x);
+    return b;
+  };
+  const ruleOut = (b, label) => {
+    b.classList.add('is-ruled-out'); b.setAttribute('aria-disabled', 'true');
+    const sr = el('span', 'sr-only', label || ', dimmed, not this one'); b.append(sr);
+  };
+  const PIECES = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+  const PIECE_NAMES = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
+
+  const buildForm = (card, done) => {
+    const box = el('div', 'mix-form');
+    const wrong = () => mixSay(mixLine.dataset.wrong);
+    if (card.form === 'choices') {
+      const opts = el('div', 'options'); opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Answers');
+      if (card.lang) opts.lang = card.lang;
+      card.opts.forEach((o, k) => {
+        const b = optionButton(o, k);
+        b.addEventListener('click', () => {
+          if (b.getAttribute('aria-disabled') === 'true') return;
+          if (k === card.correct) { b.classList.add('is-picked'); done(); } else { ruleOut(b); wrong(); }
+        });
+        opts.append(b);
+      });
+      box.append(opts);
+    }
+    if (card.form === 'numpad') {
+      const np = el('form', 'np'); np.setAttribute('autocomplete', 'off');
+      const input = el('input', 'np-display'); input.type = 'text'; input.inputMode = 'decimal'; input.placeholder = 'Type the number'; input.setAttribute('aria-label', 'Your answer, a number');
+      const keys = el('div', 'np-keys');
+      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'].forEach(k => {
+        const b = el('button', 'np-key', k); b.type = 'button';
+        if (k === '⌫') b.setAttribute('aria-label', 'Delete');
+        b.addEventListener('click', () => { input.value = k === '⌫' ? input.value.slice(0, -1) : input.value + k; });
+        keys.append(b);
+      });
+      const submit = el('button', 'btn btn--outline'); submit.type = 'submit';
+      submit.append(el('span', 'btn__text', 'Submit'));
+      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', 'Submit')); submit.append(wipe);
+      np.append(input, keys, submit);
+      np.addEventListener('submit', e => {
+        e.preventDefault();
+        const v = input.value.replace(/[\s,%$]/g, '');
+        if (!v) return;
+        if (Number(v) === Number(card.num)) { input.setAttribute('readonly', ''); done(); } else { input.value = ''; wrong(); }
+      });
+      box.append(np);
+    }
+    if (card.form === 'marker') {
+      // Each option sits at its own place on a line of powers of ten; the nearest one is the answer
+      const wrap = el('div', 'marker');
+      const order = card.pos.map((p, k) => k).sort((a, b) => card.pos[a] - card.pos[b]);
+      const scale = el('div', 'marker-scale'); scale.setAttribute('aria-hidden', 'true');
+      const line = el('div', 'marker-line');
+      const labels = [];
+      order.forEach((k, j) => {
+        const lab = el('span', 'marker-label' + (j % 2 ? ' is-low' : '') + (j === 0 ? ' is-start' : '') + (j === order.length - 1 ? ' is-end' : ''), card.opts[k]); lab.style.left = (card.pos[k] * 100) + '%'; scale.append(lab); labels[k] = lab;
+        const tick = el('span', 'marker-tick'); tick.style.left = (card.pos[k] * 100) + '%'; line.append(tick);
+      });
+      const range = el('input', 'marker-range'); range.type = 'range'; range.min = '0'; range.max = '1000'; range.step = '1'; range.value = '500';
+      range.setAttribute('aria-label', 'Marker on the line. The nearest number is your answer.');
+      line.append(range);
+      const read = el('p', 'marker-read');
+      const out = new Set();
+      const nearest = () => {
+        const f = Number(range.value) / 1000;
+        let best = -1, bd = Infinity;
+        card.pos.forEach((p, k) => { if (!out.has(k) && Math.abs(p - f) < bd) { bd = Math.abs(p - f); best = k; } });
+        return best;
+      };
+      const show = () => { const k = nearest(); read.innerHTML = ''; read.append('Nearest: ', el('strong', '', card.opts[k])); range.setAttribute('aria-valuetext', card.opts[k]); };
+      range.addEventListener('input', show);
+      const actions = el('div', 'mix-actions');
+      const set = el('button', 'btn btn--outline'); set.type = 'button'; set.append(el('span', 'btn__text', 'Set the marker'));
+      const wipe = el('span', 'btn__wipe'); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span', 'btn__wipe-text', 'Set the marker')); set.append(wipe);
+      const swap = el('button', 'ask-reset link', 'Show the four answers instead'); swap.type = 'button';
+      set.addEventListener('click', () => {
+        const k = nearest(); if (k < 0) return;
+        if (k === card.correct) { done(); return; }
+        out.add(k); labels[k].classList.add('is-out'); wrong(); show();
+      });
+      swap.addEventListener('click', () => {
+        const alt = buildForm(Object.assign({}, card, { form: 'choices' }), done);
+        box.replaceWith(alt); const first = alt.querySelector('button'); if (first) first.focus();
+      });
+      range.addEventListener('keydown', e => { if (e.key === 'Enter') set.click(); });
+      actions.append(set, swap);
+      wrap.append(scale, line, read, actions);
+      box.append(wrap);
+      show();
+    }
+    if (card.form === 'gap') {
+      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', 'Words for the gap');
+      card.opts.forEach((o, k) => {
+        const b = el('button', 'chip', o); b.type = 'button';
+        b.addEventListener('click', () => {
+          if (b.getAttribute('aria-disabled') === 'true') return;
+          const slot = mixStage.querySelector('.gap-slot');
+          if (k === card.correct) { b.classList.add('is-picked'); if (slot) { slot.textContent = o; slot.classList.add('is-filled'); } done(); }
+          else { ruleOut(b, ', not this one'); wrong(); }
+        });
+        chips.append(b);
+      });
+      box.append(chips);
+    }
+    if (card.form === 'board') {
+      const [from, to] = card.sq;
+      const board = el('div', 'board'); board.setAttribute('role', 'group'); board.setAttribute('aria-label', 'Board, white to move. Pick a white piece, then its square.');
+      const rows = card.fen.split(' ')[0].split('/');
+      const squares = [];
+      rows.forEach((row, r) => {
+        let f = 0;
+        for (const ch of row) {
+          if (/\d/.test(ch)) { for (let n = 0; n < Number(ch); n++) squares.push({ r, f: f++, p: null }); }
+          else squares.push({ r, f: f++, p: ch });
+        }
+      });
+      let sel = null, focusIdx = squares.findIndex(s => s.p && s.p === s.p.toUpperCase());
+      const name = s => 'abcdefgh'[s.f] + (8 - s.r);
+      const buttons = squares.map((s, idx) => {
+        const b = el('button', 'sq' + ((s.r + s.f) % 2 === 0 ? ' is-light' : '')); b.type = 'button';
+        b.tabIndex = idx === focusIdx ? 0 : -1;
+        const white = s.p && s.p === s.p.toUpperCase();
+        b.setAttribute('aria-label', name(s) + (s.p ? ', ' + (white ? 'white ' : 'black ') + PIECE_NAMES[s.p.toLowerCase()] : ''));
+        if (s.p) { const pc = el('span', 'pc ' + (white ? 'is-w' : 'is-b'), PIECES[s.p.toLowerCase()] + '︎'); pc.setAttribute('aria-hidden', 'true'); b.append(pc); }
+        if (s.f === 0) { const c = el('span', 'sq-coord', String(8 - s.r)); c.setAttribute('aria-hidden', 'true'); b.append(c); }
+        b.addEventListener('click', () => {
+          if (board.dataset.done) return;
+          if (white) { buttons.forEach(x => x.classList.remove('is-sel')); sel = s; b.classList.add('is-sel'); b.setAttribute('aria-pressed', 'true'); return; }
+          if (!sel) return;
+          if (name(sel) === from && name(s) === to) { board.dataset.done = '1'; b.classList.add('is-to'); done(); return; }
+          buttons.forEach(x => { x.classList.remove('is-sel'); x.removeAttribute('aria-pressed'); }); sel = null; wrong();
+        });
+        board.append(b);
+        return b;
+      });
+      // Arrow keys move over the board; Enter or Space picks
+      board.addEventListener('keydown', e => {
+        const d = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -8, ArrowDown: 8 }[e.key];
+        if (d == null) return;
+        e.preventDefault();
+        const next = focusIdx + d;
+        if (next < 0 || next > 63 || (Math.abs(d) === 1 && Math.floor(next / 8) !== Math.floor(focusIdx / 8))) return;   // stop at the edge
+        buttons[focusIdx].tabIndex = -1; focusIdx = next; buttons[next].tabIndex = 0; buttons[next].focus();
+      });
+      box.append(board);
+      // The moves of the card, as in the app: "or choose below"
+      const chips = el('div', 'chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', 'Or pick the move');
+      card.opts.forEach((o, k) => {
+        const c = el('button', 'chip', o); c.type = 'button';
+        c.addEventListener('click', () => {
+          if (c.getAttribute('aria-disabled') === 'true' || board.dataset.done) return;
+          if (k === card.correct) { c.classList.add('is-picked'); board.dataset.done = '1'; done(); } else { ruleOut(c, ', not this one'); wrong(); }
+        });
+        chips.append(c);
+      });
+      box.append(chips);
+    }
+    return box;
+  };
+
+  const buildResult = card => {
+    const res = el('div', 'mix-result');
+    if (kids) {   // no slip and no minutes here: the sample shows the answer and its why
+      const a = el('p', 'mix-answer'); const v = el('strong', '', card.form === 'numpad' ? card.num : card.opts[card.correct]);
+      if (card.lang) v.lang = card.lang;
+      a.append('Answer: ', v); res.append(a);
+      if (card.why) { const w = el('p', 'mix-why', card.why); if (card.lang) w.lang = card.lang; res.append(w); }
+      return res;
+    }
+    const slip = el('div', 'slip');
+    slip.innerHTML = '<div class="punch-row" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
+      '<p class="slip-head" data-feed>Made by you</p>' +
+      '<div class="slip-total" data-feed><span class="spark" aria-hidden="true" data-spark><svg><use href="#i-logo"/></svg></span><span class="big">+10 min</span></div>' +
+      '<dl><div class="slip-line" data-feed><dt></dt><span class="leader" aria-hidden="true"></span><dd>+10 min</dd></div></dl>';
+    slip.querySelector('dt').textContent = mixPacks[card.pack].title;
+    res.append(slip);
+    if (card.why) res.append(el('p', 'mix-why', card.why));
+    return res;
+  };
+
+  const buildCard = (card, done) => {
+    const deal = el('div', 'mix-deal');
+    const q = el('p', 'mix-q');
+    if (card.form === 'gap') {
+      const [a, b] = card.q.split('___');
+      q.append(a, Object.assign(el('span', 'gap-slot', ' '), {}), b || '');
+      q.querySelector('.gap-slot').setAttribute('aria-label', 'gap');
+    } else q.textContent = card.q;
+    if (card.lang) q.lang = card.lang;
+    deal.append(q);
+    if (card.prompt) { const pr = el('p', 'mix-prompt', '«' + card.prompt + '»'); pr.lang = 'uk'; deal.append(pr); }
+    deal.append(buildForm(card, done));
+    return deal;
+  };
+
+  // ----- one card on the stage -----
+  const deal = (keys, quiet) => {
+    mixTimers.forEach(clearTimeout); mixTimers = [];
+    const card = pick(keys);
+    if (!card) return;
+    mixCard = card; seen.add(card.i);
+    const p = mixPacks[card.pack];
+    mixPackLabel.textContent = p.short; mixLevel.textContent = card.level;
+    const node = buildCard(card, () => right(card, node));
+    mixStage.replaceChildren(node);
+    if (motion && !quiet) { node.classList.add('is-dealing'); }
+    const said = dealLine(card);
+    if (!quiet) mixSay(said); else mixLine.textContent = said;
+  };
+  const dealLine = card => {
+    const p = mixPacks[card.pack];
+    let said = mixLine.dataset.deal.replace('{pack}', p.short) + (/[.?]$/.test(p.short) ? '' : '.');
+    if (card.lang && mixLine.dataset.lang) said += ' ' + mixLine.dataset.lang.replace('{lang}', LANG_NAMES[card.lang]);
+    return said;
+  };
+  const countLine = a => {
+    const info = mixData.ages[a], n = tiles.filter(t => t.dataset.age === a).length;
+    return `<strong>${info.packs}</strong> packs for ages ${a.replace('-', '–')} · <strong>${fmt(info.questions)}</strong> questions` + (n < info.packs ? ` · ${n} of them here` : '');
+  };
+  const right = (card, node) => {
+    mixSay(mixLine.dataset.right);
+    const form = node.querySelector('.mix-form');
+    const res = buildResult(card);
+    form.replaceWith(res);
+    if (!kids) {
+      const lines = [...res.querySelectorAll('[data-feed]')];
+      const hole = res.querySelector('.punch-row span');
+      if (!motion) { lines.forEach(l => l.classList.add('is-in')); hole.classList.add('is-punched'); }
+      else {
+        lines.forEach((l, i) => mixTimers.push(setTimeout(() => l.classList.add('is-in'), 150 + i * 120)));
+        mixTimers.push(setTimeout(() => { hole.classList.add('is-punched'); flash(res.querySelector('[data-spark]')); }, 150 + lines.length * 120));
+      }
+      glowFlash();
+    }
+    mixNext.focus({ preventScroll: true });
+  };
+
+  // ----- the tallest card sets the stage height, so dealing never moves the page -----
+  const reserve = () => {
+    const probe = el('div', 'mix-measure'); probe.setAttribute('aria-hidden', 'true'); probe.inert = true;
+    mixStage.append(probe);
+    let max = 0;
+    mixCards.forEach(c => {
+      const a = buildCard(c, () => {}); probe.replaceChildren(a); max = Math.max(max, probe.offsetHeight);
+      const r = buildCard(c, () => {}); r.querySelector('.mix-form').replaceWith(buildResult(c)); probe.replaceChildren(r); max = Math.max(max, probe.offsetHeight);
+    });
+    probe.remove();
+    mixStage.style.minHeight = Math.ceil(max) + 'px';
+    if (kids) {   // the row keeps the height of the larger age group, so switching ages never moves the page
+      const rack = mixEl.querySelector('.rack'); const was = tiles.map(t => t.hidden); let mh = 0;
+      rack.style.minHeight = '';
+      if (getComputedStyle(mixEl.querySelector('.mix')).gridTemplateColumns.split(' ').length === 1)   // only when the card sits below the row
+      Object.keys(mixData.ages).forEach(a => { tiles.forEach(t => { t.hidden = t.dataset.age !== a; }); mh = Math.max(mh, rack.offsetHeight); });
+      tiles.forEach((t, i) => { t.hidden = was[i]; });
+      rack.style.minHeight = mh ? Math.ceil(mh) + 'px' : '';
+      // The lines that change text keep their tallest height too
+      const fit = (box, set, texts) => {
+        const keep = set.innerHTML; box.style.minHeight = ''; let m = 0;
+        texts.forEach(t => { set.innerHTML = t; m = Math.max(m, box.offsetHeight); });
+        set.innerHTML = keep; box.style.minHeight = Math.ceil(m) + 'px';
+      };
+      const esc = t => { const d = el('span', '', t); return d.innerHTML; };
+      fit(mixLine, mixLine, mixCards.map(dealLine).concat([mixLine.dataset.wrong, mixLine.dataset.right]).map(esc));
+      fit(mixPackLabel.parentElement, mixPackLabel, mixData.packs.map(p => esc(p.short)));
+      fit(mixCount, mixCount, Object.keys(mixData.ages).map(countLine));
+    }
+  };
+
+  if (!kids) {
+  tiles.forEach(t => t.addEventListener('click', () => {
+    if (isOn(t)) {
+      if (onKeys().length === 1) {   // the last pack stays on, as in the app
+        t.classList.remove('is-nudge'); void t.offsetWidth; if (motion) t.classList.add('is-nudge');
+        mixSay(mixLine.dataset.last);
+        return;
+      }
+      t.setAttribute('aria-pressed', 'false');
+      writeCount();
+      if (mixCard && mixCard.pack === t.dataset.pack) deal(onKeys());
+    } else {
+      t.setAttribute('aria-pressed', 'true');
+      writeCount();
+      deal([t.dataset.pack]);   // every tap shows its pack at once
+    }
+  }));
+  tiles.forEach(t => t.addEventListener('animationend', () => t.classList.remove('is-nudge')));
+  mixNext.addEventListener('click', () => deal(onKeys()));
+
+  writeCount();
+  deal(onKeys(), true);
+  } else {
+    // An age switch filters the row; picking a pack shows a sample card from it. Nothing here turns packs on.
+    const ageBtns = [...mixEl.querySelectorAll('[data-age-btn]')];
+    const shown = () => tiles.filter(t => !t.hidden);
+    const mark = key => tiles.forEach(x => x.setAttribute('aria-pressed', String(x.dataset.pack === key)));
+    const choose = (t, quiet) => { mark(t.dataset.pack); deal([t.dataset.pack], quiet); };
+    const setAge = (a, quiet) => {
+      ageBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ageBtn === a)));
+      tiles.forEach(t => { t.hidden = t.dataset.age !== a; });
+      mixCount.innerHTML = countLine(a);
+      choose(shown()[0], quiet);
+    };
+    ageBtns.forEach(b => b.addEventListener('click', () => { if (b.getAttribute('aria-pressed') !== 'true') setAge(b.dataset.ageBtn); }));
+    tiles.forEach(t => t.addEventListener('click', () => choose(t)));
+    mixNext.addEventListener('click', () => { deal(shown().map(t => t.dataset.pack)); mark(mixCard.pack); });
+    setAge('7-9', true);
+  }
+  const reserveSoon = (() => { let id = 0; return () => { clearTimeout(id); id = setTimeout(reserve, 0); }; })();
+  reserveSoon();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserveSoon);
+  if (window.ResizeObserver) { let w = 0; new ResizeObserver(entries => { const nw = Math.round(entries[0].contentRect.width); if (nw !== w) { w = nw; reserveSoon(); } }).observe(mixStage); }
+  };
+  makeDeck(document.querySelector('[data-mix]'), JSON.parse(document.getElementById('packs-data').textContent), false);
+  makeDeck(document.querySelector('[data-kids]'), JSON.parse(document.getElementById('kids-data').textContent), true);
+
   /* ---------- scroll: one read pass, one write pass per frame ---------- */
   const header = document.querySelector('.site-header');
 
   /* ---------- the island: section links, section name, menu ---------- */
-  const navIds = ['how', 'screens', 'deal', 'moments', 'cannot', 'privacy'];
+  const navIds = ['how', 'packs', 'screens', 'deal', 'moments', 'cannot', 'privacy'];
   const navSections = navIds.map(id => document.getElementById(id));
   const navAfter = document.getElementById('get');   // past the last section: no section is active
   const navLinks = [...header.querySelectorAll('.nav [data-nav]')];
@@ -1745,6 +2410,7 @@ html.menu-open { overflow: hidden; }
   reduce.addEventListener('change', applyMotion);
   window.addEventListener('scroll', queue, { passive: true });
   window.addEventListener('resize', () => { measure(); queue(); });
+  if (window.ResizeObserver) new ResizeObserver(() => { measure(); queue(); }).observe(document.getElementById('packs'));
   window.addEventListener('load', () => { measure(); queue(); });
   applyMotion();
 })();
