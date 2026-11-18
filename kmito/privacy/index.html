@@ -92,7 +92,9 @@ a { color: inherit; }
 .site-header .bar { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
 .brand { display: inline-flex; align-items: center; gap: var(--space-4); min-height: var(--size-target); text-decoration: none; font-weight: 900; font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); }
 .brand svg { width: 28px; height: 28px; color: var(--color-on-surface); }
-.brand .wordmark { display: block; width: auto; height: 21px; aspect-ratio: 74.07 / 21; margin-left: var(--space-2); }
+/* The mark's drawing fills 434.78 x 393.74 of its 512 box; Figma shows the drawing at 27.87 x 25.24 */
+.brand svg:not(.wordmark) { width: 32.82px; height: 32.82px; margin: -3.79px -2.48px; }
+.brand .wordmark { display: block; width: auto; height: 21px; aspect-ratio: 74.07 / 21; margin-left: var(--space-4); }
 .icon-btn { position: relative; display: inline-grid; place-items: center; width: var(--size-header-control); height: var(--size-header-control); border-radius: var(--radius-full); border: var(--size-hairline) solid var(--color-outline); background: transparent; color: var(--color-on-surface); cursor: pointer; overflow: hidden; }
 .icon-btn svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform var(--motion-page) var(--ease-standard), opacity var(--motion-page) var(--ease-standard); }
 .icon-btn .icon-next { transform: translateY(150%); opacity: 0; }

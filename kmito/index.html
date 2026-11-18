@@ -551,7 +551,7 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
 }
 
 /* Brand: mark always; the word steps aside for the section name on narrow screens */
-.brand { display: inline-flex; align-items: center; gap: var(--space-6); min-height: var(--size-header-control); padding-inline: var(--space-8) var(--space-6); border-radius: var(--radius-full); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); }
+.brand { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--size-header-control); padding-inline: var(--space-8) var(--space-6); border-radius: var(--radius-full); font-weight: var(--type-app-screen-title-weight); font-size: var(--type-title-large-size); letter-spacing: var(--type-app-screen-title-tracking); }
 .brand svg { width: var(--type-icon-28-size); height: var(--type-icon-28-size); flex: none; color: var(--color-on-surface); }
 .brand-word { display: inline-block; overflow: hidden; white-space: nowrap; max-width: 4em; transition: max-width var(--motion-slip) var(--page-ease-out), opacity var(--motion-page) var(--ease-standard); }
 /* Header logo: the Spark Orbit (components.md). After load it plays one of the six
@@ -560,7 +560,17 @@ section[id], footer[id] { scroll-margin-top: var(--page-header-h); }
    reduced motion. */
 /* Wordmark: the drawn letters of Figma Landing/Logo (74.07 x 21 beside the 28 mark), in the text colour */
 .brand .wordmark { display: block; height: calc(var(--type-icon-28-size) * 0.75); width: auto; aspect-ratio: 74.07 / 21; }
-.brand .orbit { fill: currentColor; }
+/* The mark's drawing fills 434.78 x 393.74 of its 512 box. Figma Landing/Logo shows the drawing at
+   27.87 x 25.24 beside the 21-high wordmark, so the box is 32.82 (28 * 1.172) and the empty rim is
+   taken back with negative margins: the layout sees the drawing, as in Figma. */
+.brand .orbit { fill: currentColor; width: calc(var(--type-icon-28-size) * 1.172); height: calc(var(--type-icon-28-size) * 1.172); margin: calc(var(--type-icon-28-size) * -0.1354) calc(var(--type-icon-28-size) * -0.0884); }
+/* Narrow screens: at the top of the page there is no island, so the logo and the menu button sit on
+   the content edges. They move inside when the island appears (after a scroll, or with the menu open). */
+.brand, .header-end { transition: transform var(--motion-slip) var(--page-ease-spring); }
+@media (max-width: 1039.98px) {
+  .site-header:not(.is-floating):not(.is-open) .brand { transform: translateX(calc((var(--space-6) + var(--space-8) + var(--size-hairline)) * -1)); }
+  .site-header:not(.is-floating):not(.is-open) .header-end { transform: translateX(calc(var(--space-6) + var(--size-hairline))); }
+}
 .brand .orbit-arcs, .brand .orbit-dots, .brand .orbit-core { transform-origin: 256px 256px; }
 
 /* Section name (narrow screens): number and name slide in when the section changes */
@@ -827,7 +837,11 @@ html.menu-open { overflow: hidden; }
 /* =====================================================================
    8b. PACKS: a mixer of pack switches and a live lock card
    ===================================================================== */
-.mix { display: grid; gap: var(--space-40); margin-top: calc(var(--space-40) * 1.5); align-items: start; }
+/* Tabs: the packs for adults first; the packs for children wait behind the second tab */
+.packs-tabs { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-32); }
+.packs-tab[aria-selected="true"] { border-color: var(--color-on-surface); background: var(--color-surface); color: var(--color-on-surface); }
+.mix[hidden], .kids[hidden] { display: none; }
+.mix { display: grid; gap: var(--space-40); margin-top: var(--space-32); align-items: start; }
 @media (min-width: 900px) { .mix { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); } }
 .rack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-10); }
 @media (min-width: 560px) { .rack { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -836,7 +850,7 @@ html.menu-open { overflow: hidden; }
   display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: var(--space-12);
   min-height: calc(var(--size-option-min) * 2); padding: var(--space-12) var(--space-14);
   border: var(--size-picked-border) solid var(--color-outline); border-radius: var(--radius-lg);
-  background: transparent; color: var(--color-on-surface-variant);
+  background: var(--color-surface); color: var(--color-on-surface-variant);
   font: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent;
   transition: border-color var(--motion-selection) var(--ease-standard), color var(--motion-selection) var(--ease-standard), background-color var(--motion-selection) var(--ease-standard);
 }
@@ -946,7 +960,7 @@ html.menu-open { overflow: hidden; }
 .sq-coord { position: absolute; left: 4%; bottom: 2%; font-family: var(--font-family-mono); font-weight: var(--font-weight-bold); font-size: 3cqi; color: var(--color-chess-piece-white); opacity: var(--tint-45); }
 
 /* Packs written for children: the same tiles and card, told to the adult reader */
-.kids { margin-top: calc(var(--space-40) * 2); padding-top: calc(var(--space-40) * 1.5); border-top: var(--size-hairline) solid var(--color-outline); }
+.kids { margin-top: var(--space-32); }
 .kids-head { max-width: 46rem; }
 .kids-title { font-weight: var(--font-weight-bold); font-size: var(--type-headline-small-size); line-height: var(--type-headline-small-line-height); text-wrap: balance; }
 .kids-lead { margin-top: var(--space-12); max-width: var(--page-measure); color: var(--color-on-surface-variant); font-size: var(--type-body-large-size); line-height: var(--type-body-large-line-height); text-wrap: pretty; }
@@ -1300,7 +1314,11 @@ html.menu-open { overflow: hidden; }
       <h2 class="h2" id="packs-title">You pick what it asks.</h2>
       <p class="lead">Turn packs on and off. The question on the card comes only from the packs that are on.</p>
     </div>
-    <div class="mix" data-mix>
+    <div class="packs-tabs" role="tablist" aria-label="Whose packs">
+      <button class="chip age-btn packs-tab" type="button" role="tab" id="packs-tab-you" aria-selected="true" aria-controls="packs-panel-you" data-packs-tab>For you</button>
+      <button class="chip age-btn packs-tab" type="button" role="tab" id="packs-tab-children" aria-selected="false" aria-controls="packs-panel-children" tabindex="-1" data-packs-tab>For your children</button>
+    </div>
+    <div class="mix" data-mix id="packs-panel-you" role="tabpanel" aria-labelledby="packs-tab-you">
       <div class="rack-wrap">
         <div class="rack reveal" role="group" aria-label="Packs. Pressed packs are on.">
         <button class="tile" type="button" aria-pressed="true" data-pack="dyk" data-count="100" aria-label="Did you know?" style="--i:0">
@@ -1366,7 +1384,7 @@ html.menu-open { overflow: hidden; }
         </div>
       </div>
     </div>
-    <div class="kids" data-kids role="region" aria-labelledby="kids-title">
+    <div class="kids" data-kids id="packs-panel-children" role="tabpanel" aria-labelledby="packs-tab-children" hidden>
       <div class="kids-head">
         <h3 class="kids-title" id="kids-title">Packs for your children too.</h3>
         <p class="kids-lead">Eleven packs are written for younger readers: nine for ages 7–9 and two for ages 10–13. You turn them on like any other pack. Pick one to see how it asks.</p>
@@ -2175,11 +2193,35 @@ html.menu-open { overflow: hidden; }
   }
   const reserveSoon = (() => { let id = 0; return () => { clearTimeout(id); id = setTimeout(reserve, 0); }; })();
   reserveSoon();
+  mixEl.addEventListener('packs:shown', reserveSoon);   // a panel that was hidden has nothing to measure until its tab opens
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserveSoon);
   if (window.ResizeObserver) { let w = 0; new ResizeObserver(entries => { const nw = Math.round(entries[0].contentRect.width); if (nw !== w) { w = nw; reserveSoon(); } }).observe(mixStage); }
   };
   makeDeck(document.querySelector('[data-mix]'), JSON.parse(document.getElementById('packs-data').textContent), false);
   makeDeck(document.querySelector('[data-kids]'), JSON.parse(document.getElementById('kids-data').textContent), true);
+
+  // Packs tabs: one panel at a time; arrow keys move between the tabs
+  (() => {
+    const tabs = [...document.querySelectorAll('[data-packs-tab]')];
+    const show = (t, focus) => {
+      tabs.forEach(x => {
+        const on = x === t;
+        x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(x.getAttribute('aria-controls'));
+        const was = panel.hidden; panel.hidden = !on;
+        if (on && was) panel.dispatchEvent(new Event('packs:shown'));
+      });
+      if (focus) t.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(t));
+      t.addEventListener('keydown', e => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault(); show(tabs[(i + d + tabs.length) % tabs.length], true);
+      });
+    });
+  })();
 
   /* ---------- scroll: one read pass, one write pass per frame ---------- */
   const header = document.querySelector('.site-header');
